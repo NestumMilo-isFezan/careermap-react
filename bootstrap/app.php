@@ -15,7 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\HandleInertiaRequests::class,
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
         ]);
-
+        $middleware->alias([
+            'user_access' => \App\Http\Middleware\UserAccess::class,
+        ]);
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -1,14 +1,15 @@
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import GuestLayout from '@/Layouts/GuestLayout';
+import { FormField } from '@/Components/shadcn/Form/Components';
+import AuthLayout from '@/Layouts/AuthLayout';
+import { Button } from '@/shadcn/components/ui/button';
+import { Spinner } from '@/shadcn/components/ui/spinner';
 import { Head, Link, useForm } from '@inertiajs/react';
+import { UserPlus } from 'lucide-react';
 import { FormEventHandler } from 'react';
 
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({
-        name: '',
+        first_name: '',
+        last_name: '',
         email: '',
         password: '',
         password_confirmation: '',
@@ -23,87 +24,86 @@ export default function Register() {
     };
 
     return (
-        <GuestLayout>
+        <AuthLayout>
             <Head title="Register" />
+            <div className="flex flex-col space-y-1 text-center">
+                <h1 className="text-2xl font-semibold tracking-tight text-green-600">Create an account</h1>
+                <p className="text-sm text-emerald-300">Enter your details to create an account</p>
+            </div>
 
             <form onSubmit={submit}>
-                <div>
-                    <InputLabel htmlFor="name" value="Name" />
-
-                    <TextInput
-                        id="name"
-                        name="name"
-                        value={data.name}
+                <div className="grid grid-cols-2 gap-2">
+                    <FormField
+                        label="First Name"
+                        type="text"
+                        value={data.first_name}
                         className="mt-1 block w-full"
-                        autoComplete="name"
+                        autoComplete="first_name"
                         isFocused={true}
-                        onChange={(e) => setData('name', e.target.value)}
+                        onChange={e => setData('first_name', e)}
+                        errorMessage={errors.first_name}
+                        disabled={processing}
                         required
                     />
 
-                    <InputError message={errors.name} className="mt-2" />
+                    <FormField
+                        label="Last Name"
+                        type="text"
+                        value={data.last_name}
+                        className="mt-1 block w-full"
+                        autoComplete="last_name"
+                        isFocused={true}
+                        onChange={e => setData('last_name', e)}
+                        errorMessage={errors.last_name}
+                        disabled={processing}
+                        required
+                    />
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="email" value="Email" />
-
-                    <TextInput
-                        id="email"
+                    <FormField
+                        label="Email"
                         type="email"
-                        name="email"
                         value={data.email}
                         className="mt-1 block w-full"
-                        autoComplete="username"
-                        onChange={(e) => setData('email', e.target.value)}
+                        autoComplete="email"
+                        isFocused={true}
+                        onChange={e => setData('email', e)}
+                        errorMessage={errors.email}
+                        disabled={processing}
                         required
                     />
-
-                    <InputError message={errors.email} className="mt-2" />
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
-
-                    <TextInput
-                        id="password"
+                    <FormField
+                        label="Password"
                         type="password"
-                        name="password"
                         value={data.password}
                         className="mt-1 block w-full"
                         autoComplete="new-password"
-                        onChange={(e) => setData('password', e.target.value)}
+                        onChange={e => setData('password', e)}
+                        errorMessage={errors.password}
+                        disabled={processing}
                         required
                     />
-
-                    <InputError message={errors.password} className="mt-2" />
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel
-                        htmlFor="password_confirmation"
-                        value="Confirm Password"
-                    />
-
-                    <TextInput
-                        id="password_confirmation"
+                    <FormField
+                        label="Confirm Password"
                         type="password"
-                        name="password_confirmation"
                         value={data.password_confirmation}
                         className="mt-1 block w-full"
                         autoComplete="new-password"
-                        onChange={(e) =>
-                            setData('password_confirmation', e.target.value)
-                        }
+                        onChange={e => setData('password_confirmation', e)}
+                        errorMessage={errors.password_confirmation}
+                        disabled={processing}
                         required
-                    />
-
-                    <InputError
-                        message={errors.password_confirmation}
-                        className="mt-2"
                     />
                 </div>
 
-                <div className="mt-4 flex items-center justify-end">
+                <div className="mt-8 flex flex-col gap-2 items-start justify-end">
                     <Link
                         href={route('login')}
                         className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
@@ -111,11 +111,20 @@ export default function Register() {
                         Already registered?
                     </Link>
 
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Register
-                    </PrimaryButton>
+                    {/* Submit Button */}
+                    <Button type="submit" disabled={processing} className="w-full" size="lg">
+                        {processing ? (
+                            <span className="flex items-center gap-2">
+                                <Spinner className="mr-2 text-emerald-900" /> Registering...
+                            </span>
+                        ) : (
+                            <span className="flex items-center gap-2 font-bold">
+                                <UserPlus className="mr-2 size-6" /> Register
+                            </span>
+                        )}
+                    </Button>
                 </div>
             </form>
-        </GuestLayout>
+        </AuthLayout>
     );
 }
