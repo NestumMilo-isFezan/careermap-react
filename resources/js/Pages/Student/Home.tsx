@@ -1,6 +1,9 @@
+import RoadmapIcon from '@/Components/Card/RoadmapIcon';
 import StudentLayout from '@/Layouts/StudentLayout';
-import { PageProps } from '@/types';
-import { Head, usePage } from '@inertiajs/react';
+import { Button, buttonVariants } from '@/shadcn/components/ui/button';
+import { Card, CardContent, CardHeader } from '@/shadcn/components/ui/card';
+import { PageProps, PaginatedData, Roadmap, User } from '@/types';
+import { Head, Link, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 
 const slides = [
@@ -58,8 +61,8 @@ const Carousel = () => {
     };
 
     return (
-        <div className="relative w-full overflow-hidden">
-            <div className="relative min-h-[50svh] w-full">
+        <div className="relative w-full overflow-hidden rounded-xl">
+            <div className="relative min-h-[50svh] w-full ">
                 <button
                     onClick={previous}
                     className="absolute left-4 top-1/2 z-20 -translate-y-1/2 rounded-full bg-black/30 p-2 text-white hover:bg-black/50 focus:outline-none"
@@ -107,7 +110,7 @@ const Carousel = () => {
                             </p>
                         </div>
                         <img
-                            className="absolute w-full h-full inset-0 object-cover text-neutral-600 dark:text-neutral-300"
+                            className="absolute w-full h-full inset-0 object-cover text-neutral-600 dark:text-neutral-300 rounded-lg"
                             src={slide.imgSrc}
                             alt={slide.imgAlt}
                         />
@@ -151,19 +154,82 @@ const Carousel = () => {
     );
 };
 
-export default function Home({ auth }: PageProps) {
-    const user = usePage().props.auth.user;
+const HomeRoadmapCard = ({ roadmap }: { roadmap: Roadmap }) => {
+    const fixedDescription = roadmap.description.substring(0, 100) + '...';
+    const maxHeight = 'h-34 md:h-48';
+    const minHeight = 'min-h-44 md:min-h-64';
+    return (
+        <>
+        <Card className="max-w-sm overflow-hidden group bg-yellow-50/50 text-neutral-600 border-emerald-500">
+          <div className={`${maxHeight} overflow-hidden`}>
+            <img
+              src={roadmap.image}
+              alt={roadmap.title}
+              className="w-full h-full object-cover transition duration-700 ease-out group-hover:scale-105"
+            />
+          </div>
+          <CardHeader className="p-6 pb-0">
+            <div className="flex items-center gap-1 font-medium">
+              <RoadmapIcon domain={roadmap.domain_name} className="size-5" />
+              <span>{roadmap.domain_name}</span>
+            </div>
+          </CardHeader>
+          <CardContent className={`p-6 pt-4 pb-0`}>
+            <h3 className="text-balance text-xl lg:text-2xl font-bold text-neutral-900 mb-4 line-clamp-2" aria-describedby="roadmapDescription">
+              {roadmap.title}
+            </h3>
+            <p id="roadmapDescription" className="text-pretty text-sm mb-6">
+              {fixedDescription}
+            </p>
+          </CardContent>
+        </Card>
+        </>
+    );
+};
+
+interface HomeProps {
+    recommendations: PaginatedData<Roadmap>
+    user: User
+}
+
+export default function Home({ recommendations, user }: HomeProps) {
 
     return (
         <StudentLayout>
             <Head title="Welcome" />
-            <div className="flex flex-col gap-4 items-center min-h-screen">
-                <h1 className="text-2xl font-extrabold text-emerald-900">
-                    Welcome,
-                    <span className="text-emerald-500"> {user.name}</span>
-                    <span className="text-emerald-500">✨</span>
-                </h1>
-                <Carousel />
+            <div className="flex flex-col items-center min-h-screen">
+                <div className="absolute top-16 w-full md:px-4 mx-auto flex flex-col items-center bg-emerald-100">
+                    <h1 className="text-2xl font-extrabold text-emerald-900">
+                        Welcome,
+                        <span className="text-emerald-500"> {user.name}</span>
+                        <span className="text-emerald-500">✨</span>
+                    </h1>
+                </div>
+                <div className="w-full md:px-4 mx-auto flex flex-col gap-4 pt-6">
+                    <h1 className="text-3xl font-extrabold text-emerald-900 text-center">
+                        NEWS
+                    </h1>
+                    <Carousel />
+                </div>
+                <div className="w-full md:px-4 mx-auto gap-4 pt-12">
+                    <div className="w-full px-4 flex flex-col gap-4">
+                        <h1 className="text-3xl font-extrabold text-emerald-900 text-center pt-2">
+                            Roadmap Recommendations
+                        </h1>
+                        <div className="flex justify-end px-8">
+                            <Link href={route('student.roadmap.index')} className={buttonVariants({ variant: 'default' })}>
+                                View All
+                            </Link>
+                        </div>
+                        <div className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 py-4 pb-8 mx-auto w-full md:max-w-screen-lg">
+                            {recommendations && recommendations.data.map((roadmap: Roadmap) => (
+                                <div>
+                                    <HomeRoadmapCard roadmap={roadmap} />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
             </div>
         </StudentLayout>
     );

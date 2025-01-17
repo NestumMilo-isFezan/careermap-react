@@ -3,16 +3,16 @@
 namespace App\Http\Controllers\Student;
 
 
+use App\Http\Resources\Roadmap\UniversalCourseResource;
 use Inertia\Inertia;
+use App\Models\Course;
 use App\Models\Domain;
 use App\Models\Roadmap;
-use App\Models\UserRoadmap;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Resources\RoadmapResource;
 use App\Services\RoadmapRecommendationService;
 use App\Http\Resources\RecommendedRoadmapResource;
+use App\Http\Resources\Roadmap\ModifiedCourseResource;
 
 class RoadmapController extends Controller
 {
@@ -31,19 +31,20 @@ class RoadmapController extends Controller
             'description' => $domain->description
         ])->toArray();
 
+        $roadmap = null;
+
         $query = Roadmap::query();
-        if(request('name')){
-            $query->where('title', 'like', '%' . request('name') . '%');
-        }
-        if(request('domain_id')){
-            $query->where('domain_id', request('domain_id'));
-        }
-        if(request('recommendation')){
-            $sortedRoadmap = $this->roadmapRecommendationService->recommendationProcess(request('recommendation'));
-        }
-        else{
-            $sortedRoadmap = $this->roadmapRecommendationService->recommendationProcess();
-        }
+
+        $recommendation = request('recommendation');
+        $name = request('name');
+        $domainId = request('domain_id');
+
+        $sortedRoadmap = match(true) {
+            !empty($name) => $this->roadmapRecommendationService->recommendationProcess(null, $name),
+            !empty($domainId) => $this->roadmapRecommendationService->recommendationProcess(null, null, $domainId),
+            !empty($recommendation) => $this->roadmapRecommendationService->recommendationProcess($recommendation),
+            default => $this->roadmapRecommendationService->recommendationProcess()
+        };
 
         $roadmaps = $query->paginate(12);
 
@@ -54,60 +55,57 @@ class RoadmapController extends Controller
         ]);
     }
 
-    public function show($id)
+    public function show(int $id)
     {
-        $userId = Auth::user()->id;
-        $hasUserRoadmap = UserRoadmap::where('user_id', $userId)
-            ->where('roadmap_id', $id)
-            ->exists();
+        //fixed
+        $roadmap = $this->roadmapRecommendationService->getRoadmapById($id);
 
-        if ($hasUserRoadmap) {
-            $roadmap = Roadmap::with([
-                'milestone',
-                'milestone.checklists',
-                'milestone.checklists.userChecklist' => function($query) use ($userId) {
-                    $query->where('user_milestone_id', function($subquery) use ($userId) {
-                        $subquery->select('id')
-                            ->from('user_milestones')
-                            ->where('user_id', $userId)
-                            ->limit(1);
-                    });
-                }
-            ])->findOrFail($id);
-        } else {
-            $roadmap = Roadmap::with([
-                'milestone',
-                'milestone.checklists'
-            ])->findOrFail($id);
-        }
+        $institutionName = Course::first()->institution_name;
+        $institutionId = strtolower(str_replace(' ', '-', $institutionName));
+        $universityCourses = Course::where('domain_id', $roadmap->domain_id)
+        ->where('course_level', 'Bachelor')
+        ->get();
 
-        return view('pages.student.roadmap.show', compact('roadmap', 'hasUserRoadmap'));
+        $foundationCourses = Course::where('domain_id', $roadmap->domain_id)
+        ->where('course_level', 'Foundation')
+        ->get();
+
+        $diplomaCourses = Course::where('domain_id', $roadmap->domain_id)
+        ->where('course_level', 'Diploma')
+        ->get();
+
+        // not fixed, cant access collection
+        return response()->json([
+            'data' => $roadmap,
+            'courses' => [
+                'universityCourses' => [
+                    'id' => $institutionId,
+                    'institution_name' => $institutionName,
+                    'courses' => $universityCourses->isEmpty() ? null : UniversalCourseResource::collection($universityCourses)
+                ],
+                'foundationCourse' => [
+                    'id' => $institutionId . '-foundation',
+                    'institution_name' => $institutionName,
+                    'faculty_name' => 'Foundation Programme',
+                    'courses' => $foundationCourses->isEmpty() ? null : ModifiedCourseResource::collection($foundationCourses),
+                ],
+                'diplomaCourse' => [
+                    'id' => $institutionId . '-diploma',
+                    'institution_name' => $institutionName,
+                    'faculty_name' => 'Diploma Programme',
+                    'courses' => $diplomaCourses->isEmpty() ? null : ModifiedCourseResource::collection($diplomaCourses),
+                ],
+            ],
+        ]);
     }
 
-    public function store(Request $request, $roadmapId){
-        try {
-            $existingRoadmap = UserRoadmap::where('user_id', Auth::user()->id)->where('roadmap_id', $roadmapId)->first();
-            if ($existingRoadmap) {
-                return redirect()->back()->with('error', 'Roadmap already exists');
-            }
-            $this->compatibilityService->processCompatibility($request->user()->id, $roadmapId);
-            return redirect()->back()->with('success', 'Roadmap added successfully');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+    public function store(Request $request, $roadmapId)
+    {
+        //
     }
 
     public function destroy($roadmapId)
     {
-        try {
-            $userRoadmap = UserRoadmap::where('user_id', Auth::user()->id)->where('roadmap_id', $roadmapId)->first();
-            if (!$userRoadmap) {
-                return redirect()->back()->with('error', 'Roadmap not found');
-            }
-            $userRoadmap->delete();
-            return redirect()->back()->with('success', 'Roadmap deleted successfully');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        //
     }
 }

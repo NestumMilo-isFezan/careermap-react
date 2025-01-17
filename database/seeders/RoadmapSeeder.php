@@ -419,6 +419,18 @@ class RoadmapSeeder extends Seeder
             'requirement' => 'c'
         ]);
 
+        $adaptation = Adaptation::create([
+            'name' => 'Required Traits',
+            'description' => 'Key personality traits for success in Education',
+            'roadmap_id' => $roadmap->id,
+        ]);
+
+        AdaptationItem::create([
+            'name' => 'Empathy and Compassion',
+            'persona_id' => Persona::where('name', 'Compassion')->first()->id,
+            'adaptation_id' => $adaptation->id,
+        ]);
+
         // Health & Nursing Roadmap
         $roadmap = Roadmap::create([
             'title' => 'Registered Nurse',
@@ -599,6 +611,18 @@ class RoadmapSeeder extends Seeder
             'requirement' => 'c'
         ]);
 
+        $adaptation = Adaptation::create([
+            'name' => 'Required Traits',
+            'description' => 'Key personality traits for success in Environmental Science',
+            'roadmap_id' => $roadmap->id,
+        ]);
+
+        AdaptationItem::create([
+            'name' => 'Environmental Awareness',
+            'persona_id' => Persona::where('name', 'Conscientiousness')->first()->id,
+            'adaptation_id' => $adaptation->id,
+        ]);
+
         // Social Science Roadmap
         $roadmap = Roadmap::create([
             'title' => 'Sociologist',
@@ -632,6 +656,18 @@ class RoadmapSeeder extends Seeder
             'subject_id' => Subject::where('subject_name', 'Bahasa Melayu')->first()->id,
             'prerequisite_id' => $trialsSPMPrerequisite->id,
             'requirement' => 'c'
+        ]);
+
+        $adaptation = Adaptation::create([
+            'name' => 'Required Traits',
+            'description' => 'Key personality traits for success in Sociology',
+            'roadmap_id' => $roadmap->id,
+        ]);
+
+        AdaptationItem::create([
+            'name' => 'Research Mindset',
+            'persona_id' => Persona::where('name', 'Curiosity')->first()->id,
+            'adaptation_id' => $adaptation->id,
         ]);
     }
 }

@@ -33,15 +33,9 @@ return new class extends Migration
             $table->enum('selected_option', ['option_1', 'option_2']);
             $table->timestamps();
         });
-        Schema::create('trait_results', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('student_id')->constrained('students')->cascadeOnDelete();
-            $table->timestamps();
-        });
         Schema::create('persona_scores', function (Blueprint $table) {
             $table->id();
             $table->foreignId('student_id')->constrained('students')->cascadeOnDelete();
-            $table->foreignId('trait_result_id')->constrained()->cascadeOnDelete();
             $table->foreignId('persona_id')->constrained()->cascadeOnDelete();
             $table->integer('score');
             $table->timestamps();

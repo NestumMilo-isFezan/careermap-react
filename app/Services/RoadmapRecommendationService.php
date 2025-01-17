@@ -6,6 +6,7 @@ use App\Models\Domain;
 use App\Models\Roadmap;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\RecommendedRoadmapResource;
+use App\Http\Resources\Roadmap\SelectedRoadmapResource;
 
 
 class RoadmapRecommendationService
@@ -37,7 +38,7 @@ class RoadmapRecommendationService
         return $roadmaps->sortByDesc('recommendation_score');
     }
 
-    public function recommendationProcess($recommendation = null)
+    public function recommendationProcess($recommendation = null, $name = null, $domainId = null)
     {
         $user = Auth::user();
         $studentStream = $user->student->stream;
@@ -47,8 +48,35 @@ class RoadmapRecommendationService
         if($recommendation){
             $sortedRoadmap = $this->filterByRecommendation($recommendation, $sortedRoadmap);
         }
+        if($name){
+            $sortedRoadmap = $this->filterByName($name, $sortedRoadmap);
+        }
+        if($domainId){
+            $sortedRoadmap = $this->filterByDomainId($domainId, $sortedRoadmap);
+        }
 
         return $this->paginating(12, $sortedRoadmap);
+    }
+
+    public function getRoadmapById($id){
+        $user = Auth::user();
+        $studentStream = $user->student->stream;
+        $sortedRoadmap = $this->recommendByStudentStream($studentStream->id);
+        $roadmap = $sortedRoadmap->filter(function($roadmap) use ($id){
+            return $roadmap->id == $id;
+        })->first();
+        return new SelectedRoadmapResource($roadmap);
+    }
+
+    public function getRoadmapByThreeHighestPersonaScore($personaId1, $personaId2, $personaId3){
+        $user = Auth::user();
+        $studentStream = $user->student->stream;
+        $sortedRoadmap = $this->recommendByStudentStream($studentStream->id);
+        $roadmap = $sortedRoadmap->filter(function($roadmap) use ($personaId1, $personaId2, $personaId3){
+            $personaIds = $roadmap->adaptation->items->pluck('persona_id')->toArray();
+            return in_array($personaId1, $personaIds) || in_array($personaId2, $personaIds) || in_array($personaId3, $personaIds);
+        })->take(6);
+        return $roadmap;
     }
 
     public function filterByRecommendation($recommendation, $sortedRoadmap){
@@ -64,6 +92,18 @@ class RoadmapRecommendationService
             default:
                 return $sortedRoadmap;
         }
+    }
+
+    public function filterByName($name, $sortedRoadmap){
+        return $sortedRoadmap->filter(function($roadmap) use ($name) {
+            return strpos($roadmap->title, $name) !== false;
+        })->values();
+    }
+
+    public function filterByDomainId($domainId, $sortedRoadmap){
+        return $sortedRoadmap->filter(function($roadmap) use ($domainId) {
+            return $roadmap->domain_id == $domainId;
+        })->values();
     }
 
     public function paginating($pageSize, $collection)

@@ -1,11 +1,11 @@
 import StudentLayout from '@/Layouts/StudentLayout';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Head, router, Link } from '@inertiajs/react';
-import { PaginatedData, Roadmap, Domain } from '@/types';
+import { Head, router, Link, Deferred } from '@inertiajs/react';
+import { PaginatedData, Roadmap, Domain, SelectedRoadmap } from '@/types';
 
 // Icons
-import { Grip, Search, ThumbsUp, ThumbsDown, X, PackageOpen } from 'lucide-react';
+import { Grip, Search, ThumbsUp, ThumbsDown, X, PackageOpen, MapPin } from 'lucide-react';
 
 // Components
 import Pagination from '@/Components/Pagination';
@@ -20,13 +20,15 @@ import {
     Dialog,
     DialogContent,
     DialogDescription,
-    DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
   }from '@/shadcn/components/ui/dialog';
+import ViewModal from './Content/ViewModal';
+import RoadmapViewSkeleton from '@/Components/RoadmapViewSkeleton';
+import DisplayModal from './Content/DisplayModal';
 
-export default function Index({ roadmaps, domains, queryParams = null }: { roadmaps: PaginatedData<Roadmap>, domains: Domain[], queryParams: any }) {
+export default function Index({ roadmaps, domains, queryParams = null, roadmap_item = null }: { roadmaps: PaginatedData<Roadmap>, domains: Domain[], queryParams: any, roadmap_item: SelectedRoadmap | null }) {
     queryParams = queryParams ?? {};
     const searchFieldChanged = (field: string, value: string) => {
         if(value) {
@@ -62,15 +64,36 @@ export default function Index({ roadmaps, domains, queryParams = null }: { roadm
     const [domainFilter, setDomainFilter] = useState('0');
     const [recommendationFilter, setRecommendationFilter] = useState('all');
     const [selectedRoadmap, setSelectedRoadmap] = useState<Roadmap | null>(null);
+    const [isViewModalReady, setIsViewModalReady] = useState(false);
+
+    const viewRoadmap = (roadmap: Roadmap) => {
+        setSelectedRoadmap(roadmap);
+    }
+
+    const handleCloseDialog = () => {
+        setSelectedRoadmap(null);
+    }
 
     return (
         <StudentLayout>
             <Head title="Roadmaps" />
-            <Dialog open={selectedRoadmap !== null} onOpenChange={(open) => !open && setSelectedRoadmap(null)}>
+            <Dialog open={selectedRoadmap !== null} onOpenChange={(open) => !open && handleCloseDialog()}>
                 <div className="flex flex-col w-full pb-10">
-                    <div className="flex flex-col w-full p-6 pb-10 bg-emerald-50 border border-primary rounded-lg">
-                        <div className="flex flex-row items-center justify-start gap-3 px-6 py-2 pb-5">
-                            <div className="relative w-full max-w-sm">
+                    <div className="flex flex-col w-full p-4 sm:p-6 pb-10 bg-emerald-50 border border-primary rounded-lg">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center px-2 sm:px-6 py-2 gap-4">
+                            <span className="inline-block p-3 bg-emerald-100 rounded-md border border-emerald-200">
+                                <MapPin className="size-6 text-emerald-600" />
+                            </span>
+                            <div className="flex flex-col">
+                                <h1 className="text-xl sm:text-2xl font-bold text-emerald-800">Roadmaps</h1>
+                                <p className="text-emerald-700 text-sm text-justify max-w-lg">
+                                    Explore a wide range of career paths and discover the best fit for you.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-start gap-3 px-2 sm:px-6 py-2 pb-5">
+                            <div className="relative w-full sm:max-w-sm">
                                 <Input
                                     type="text"
                                     placeholder="Search..."
@@ -80,12 +103,12 @@ export default function Index({ roadmaps, domains, queryParams = null }: { roadm
                                 />
                                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-emerald-500" />
                             </div>
-                            <div className="flex flex-row gap-2 w-full max-w-xs">
+                            <div className="flex flex-row gap-2 w-full sm:w-auto">
                                 <Select
                                     value={domainFilter}
                                     onValueChange={ (e) => { setDomainFilter(e); searchFieldChanged('domain_id', e) } }
                                 >
-                                    <SelectTrigger className="bg-white border-emerald-500 focus:border-emerald-500 text-emerald-500">
+                                    <SelectTrigger className="w-full sm:w-[200px] bg-white border-emerald-500 focus:border-emerald-500 text-emerald-500">
                                         <SelectValue placeholder="Domain Filter" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -114,12 +137,12 @@ export default function Index({ roadmaps, domains, queryParams = null }: { roadm
                                     </Button>
                                 )}
                             </div>
-                            <div className="flex flex-row gap-2 w-full max-w-xs">
+                            <div className="flex flex-row gap-2 w-full sm:w-auto">
                                 <Select
                                     value={recommendationFilter}
                                     onValueChange={ (e) => { setRecommendationFilter(e); searchFieldChanged('recommendation', e) } }
                                 >
-                                    <SelectTrigger className="bg-white border-emerald-500 focus:border-emerald-500 text-emerald-500">
+                                    <SelectTrigger className="w-full sm:w-[200px] bg-white border-emerald-500 focus:border-emerald-500 text-emerald-500">
                                         <SelectValue placeholder="Recommendation Filter" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -154,41 +177,40 @@ export default function Index({ roadmaps, domains, queryParams = null }: { roadm
                             </div>
                         </div>
 
-                        {/* <div>
-                            <pre>{JSON.stringify(roadmaps, null, 2)}</pre>
-                        </div> */}
                         {roadmaps && roadmaps.data.length > 0 ? (
-                                <>
-                                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 px-6 py-2">
-                                    {roadmaps.data.map((roadmap: Roadmap) => (
-                                        <DialogTrigger key={roadmap.id} asChild onClick={() => setSelectedRoadmap(roadmap)}>
-                                            <div className="cursor-pointer">
-                                                <RoadmapItem roadmap={roadmap} />
-                                            </div>
-                                        </DialogTrigger>
-                                    ))}
-                                </div>
-                                <div className="flex items-center justify-center mt-8">
-                                    <Pagination meta={roadmaps.meta} />
-                                </div>
-                                </>
-                            ) : (
-                                <div className="flex flex-col min-h-[22rem] items-center justify-center py-4">
-                                    <PackageOpen className="size-12 text-emerald-500" />
-                                    <p className="text-pretty text-sm text-emerald-900">No Roadmap Found</p>
-                                </div>
-                            )
-                        }
+                            <>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 px-2 sm:px-6 py-2">
+                                {roadmaps.data.map((roadmap: Roadmap) => (
+                                    <DialogTrigger key={roadmap.id} asChild onClick={() => viewRoadmap(roadmap)}>
+                                        <div className="cursor-pointer">
+                                            <RoadmapItem roadmap={roadmap} />
+                                        </div>
+                                    </DialogTrigger>
+                                ))}
+                            </div>
+                            <div className="flex items-center justify-center mt-8">
+                                <Pagination meta={roadmaps.meta} />
+                            </div>
+                            </>
+                        ) : (
+                            <div className="flex flex-col min-h-[22rem] items-center justify-center py-4">
+                                <PackageOpen className="size-12 text-emerald-500" />
+                                <p className="text-pretty text-sm text-emerald-900">No Roadmap Found</p>
+                            </div>
+                        )}
                     </div>
-                    <DialogContent className="max-w-[100vw] h-[100vh] p-0">
-                        <DialogHeader className="p-6">
-                            <DialogTitle>{selectedRoadmap?.title}</DialogTitle>
-                            <DialogDescription>
+
+                    <DialogContent className="max-w-[100vw] h-[100vh] p-2 sm:p-4 bg-emerald-50">
+                        <DialogHeader className="p-2">
+                            <DialogTitle className="text-emerald-900 text-lg sm:text-xl">{selectedRoadmap?.title}</DialogTitle>
+                            <DialogDescription className="text-slate-700">
                                 View roadmap details
                             </DialogDescription>
                         </DialogHeader>
-                        <div className="flex-1 p-6">
-                            {/* Add your roadmap content here */}
+                        <div className="bg-emerald-200 border border-primary rounded-lg">
+                            <div className="p-2 sm:p-4 h-[80vh] flex flex-row">
+                                <DisplayModal id={selectedRoadmap?.id.toString() ?? ''} />
+                            </div>
                         </div>
                     </DialogContent>
                 </div>

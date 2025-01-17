@@ -85,3 +85,73 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Custom Scrollbar Styles */
+::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 4px 0;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(16 185 129 / 0.3);
+    border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(16 185 129 / 0.5);
+}
+
+/* Hide the up/down buttons */
+::-webkit-scrollbar-button {
+    display: none;
+}
+
+/* For Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(16 185 129 / 0.3) transparent;
+}
+
+/* Optional: Hide scrollbar while still being able to scroll */
+.scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari and Opera */
+}
+
+/* Optional: Custom styled scrollbar class */
+.custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(16 185 129 / 0.3) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+    margin: 4px 0;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgb(16 185 129 / 0.3);
+    border-radius: 9999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgb(16 185 129 / 0.5);
+}
+
+.custom-scrollbar::-webkit-scrollbar-button {
+    display: none;
+}

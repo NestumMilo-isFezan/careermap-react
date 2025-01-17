@@ -203,7 +203,7 @@ class StudentRegistrationController extends Controller
         return redirect()->route('home');
     }
 
-    public function skipGrades(Request $request)
+    public function skipGrades()
     {
         $userId = Auth::id();
         $user = User::find($userId);

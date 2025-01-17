@@ -3,6 +3,7 @@
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Student\TraitsController;
 
 Route::get('/', function () {
     if(Auth::check()){
@@ -29,21 +30,22 @@ Route::middleware(['auth', 'user_access:0'])->prefix('student')->name('student.'
     Route::get('/home', [App\Http\Controllers\Student\HomeController::class, 'index'])->name('home');
 
     Route::get('/roadmap', [App\Http\Controllers\Student\RoadmapController::class, 'index'])->name('roadmap.index');
-    Route::post('/roadmap/{roadmapId}', [App\Http\Controllers\Student\RoadmapController::class, 'store'])->name('roadmap.store');
-    Route::delete('/roadmap/{roadmapId}', [App\Http\Controllers\Student\RoadmapController::class, 'destroy'])->name('roadmap.destroy');
     Route::get('/roadmap/{roadmapId}', [App\Http\Controllers\Student\RoadmapController::class, 'show'])->name('roadmap.show');
 
-    Route::get('/traits/questions', [App\Http\Controllers\Student\TraitsController::class, 'index'])
-        ->name('traits.questions');
+    Route::get('/traits', [App\Http\Controllers\Student\TraitsController::class, 'index'])->name('traits.index');
+    Route::get('/traits/assessment', [App\Http\Controllers\Student\TraitsController::class, 'create'])->name('traits.create');
+    Route::post('/traits/assessment', [App\Http\Controllers\Student\TraitsController::class, 'store'])->name('traits.store');
+    Route::delete('/traits/delete/assessment', [App\Http\Controllers\Student\TraitsController::class, 'destroy'])->name('traits.destroy');
 
-    Route::post('/traits/answer', [App\Http\Controllers\Student\TraitsController::class, 'storeAnswer'])
-        ->name('traits.store-answer');
+    Route::get('/resume', [App\Http\Controllers\Student\ResumeController::class, 'index'])->name('resume.index');
 
-    Route::get('/traits/results', [App\Http\Controllers\Student\TraitsController::class, 'results'])
-        ->name('traits.results');
+    Route::get('/curricular', [App\Http\Controllers\Student\CurricularExchangeController::class, 'index'])->name('curricular.index');
+    Route::post('/curricular', [App\Http\Controllers\Student\CurricularExchangeController::class, 'store'])->name('curricular.store');
+    Route::put('/curricular/{id}', [App\Http\Controllers\Student\CurricularExchangeController::class, 'update'])->name('curricular.update');
+    Route::delete('/curricular/{id}', [App\Http\Controllers\Student\CurricularExchangeController::class, 'destroy'])->name('curricular.destroy');
 
-    Route::post('/traits/retake', [App\Http\Controllers\Student\TraitsController::class, 'retake'])
-        ->name('traits.retake');
+    Route::get('/feedback', [App\Http\Controllers\Student\FeedbackController::class, 'index'])->name('feedback.index');
+
 });
 
 // Admin Routes
@@ -71,6 +73,5 @@ Route::middleware(['auth', 'user_access:1'])->prefix('admin')->name('admin.')->g
 Route::middleware(['auth', 'user_access:2'])->prefix('teacher')->name('teacher.')->group(function(){
     Route::get('/dashboard', [App\Http\Controllers\Teacher\DashboardController::class, 'index'])->name('dashboard');
 });
-
 
 require __DIR__.'/auth.php';

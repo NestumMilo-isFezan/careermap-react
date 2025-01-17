@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Roadmap;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -14,7 +15,8 @@ class RecommendedRoadmapResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $imagePath = asset('storage/' . $this->image);
+        $roadmap = Roadmap::find($this->id);
+        $imagePath = asset('storage/' . $roadmap->image);
         return [
             'id' => $this->id,
             'title' => $this->title,

@@ -63,6 +63,18 @@ export type Roadmap = {
     recommendation_score?: number;
 }
 
+export type Curriculum = {
+    id: number;
+    name: string;
+    description: string;
+    document_url: string;
+    status: string;
+    level: string;
+    student_id: number;
+    created_at: string;
+    updated_at: string;
+}
+
 export type Domain = {
     id: number;
     name: string;
@@ -97,6 +109,67 @@ export interface AdminDashboardProps extends PageProps {
     totalRoadmaps: number;
     roadmapsWithUser: number;
     completedTests?: number;
+}
+
+export type SelectedRoadmap = {
+    roadmap: Roadmap;
+    prerequisites: [
+        {
+            id: number,
+            name: string,
+            subject_name: string,
+            grade: string,
+            user_grade: string,
+            status: string,
+        }
+    ];
+    personas: [
+        {
+            id: number,
+            name: string,
+            persona_name: string,
+            persona_description: string,
+            status: string,
+        }
+    ];
+    domain: Domain;
+    university_course: {
+        id: string,
+        institution_name: string,
+        courses: [
+            {
+                id: number,
+                faculty_name: string,
+                course_name: string,
+                description: string,
+                course_level: string,
+            }
+        ],
+    };
+    foundation_course: {
+        id: string,
+        institution_name: string,
+        faculty_name: string,
+        courses: [
+            {
+                id: number,
+                course_name: string,
+                description: string,
+            }
+        ],
+    };
+    diploma_course: {
+        id: string,
+        institution_name: string,
+        faculty_name: string,
+        courses: [
+            {
+                id: number,
+                course_name: string,
+                description: string,
+            }
+        ],
+    };
 }
 
 declare module '@inertiajs/core' {

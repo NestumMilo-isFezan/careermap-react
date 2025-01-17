@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 class Student extends Model
 {
@@ -29,13 +28,18 @@ class Student extends Model
         return $this->belongsTo(Stream::class);
     }
 
-    public function traitResult(): HasOne
+    public function personaScores()
     {
-        return $this->hasOne(TraitResults::class);
+        return $this->hasMany(PersonaScore::class);
     }
 
     public function classroom()
     {
         return $this->belongsTo(Classroom::class);
+    }
+
+    public function curriculums()
+    {
+        return $this->hasMany(Curriculum::class);
     }
 }

@@ -7,16 +7,17 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/shadcn/components/u
 
 import { useState } from "react";
 import RoadmapIcon from "./RoadmapIcon";
+import RecommendationBadge from "./RecommendationBadge";
 
 interface Props {
     roadmap: Roadmap,
-    onDelete?: (id: number) => void,
+    onDelete?: (id: number, name: string) => void,
 }
 
 export default function RoadmapItem({roadmap, onDelete}: Props) {
     const fixedDescription = roadmap.description.substring(0, 100) + '...';
-    const maxHeight = "max-h-[25rem]";
-    const minHeight = "min-h-[12rem]";
+    const maxHeight = "h-34 md:h-48";
+    const minHeight = "min-h-[10rem]";
 
     const recommendationPercentage = roadmap.recommendation_score ? roadmap.recommendation_score : 0;
 
@@ -24,22 +25,30 @@ export default function RoadmapItem({roadmap, onDelete}: Props) {
 
     return (
         <>
-        <Card className="max-w-sm overflow-hidden group bg-neutral-50 text-neutral-600 dark:bg-neutral-900 dark:text-neutral-300 border-neutral-300 dark:border-neutral-700">
-          <div className={`h-44 md:h-64 overflow-hidden ${maxHeight}`}>
+        <Card className="max-w-sm overflow-hidden group bg-yellow-50/50 text-neutral-600 border-emerald-500">
+          <div className={`relative h-44 md:h-64 overflow-hidden ${maxHeight}`}>
             <img
               src={roadmap.image}
               alt={roadmap.title}
               className="w-full h-full object-cover transition duration-700 ease-out group-hover:scale-105"
             />
+            {user?.role === 0 && (
+              <div className="absolute bottom-4 right-4">
+                <RecommendationBadge recommendationPercentage={recommendationPercentage} />
+              </div>
+            )}
           </div>
           <CardHeader className="p-6 pb-0">
-            <div className="flex items-center gap-1 font-medium">
-              <RoadmapIcon domain={roadmap.domain_name} className="size-5" />
-              <span>{roadmap.domain_name}</span>
+            <div className="flex flex-row items-center gap-2">
+                <div className="flex flex-row items-center gap-1 font-medium text-sky-500 py-1 px-2 rounded-full text-sm bg-sky-100/50 border border-sky-500 group-hover:bg-sky-200/70 group-hover:text-sky-700 transition-all duration-300 ease-in-out">
+                    <RoadmapIcon domain={roadmap.domain_name} className="size-5" />
+                    <span>{roadmap.domain_name}</span>
+                </div>
+
             </div>
           </CardHeader>
           <CardContent className={`p-6 pt-4 pb-0 ${minHeight}`}>
-            <h3 className="text-balance text-xl lg:text-2xl font-bold text-neutral-900 dark:text-white mb-4 line-clamp-2" aria-describedby="roadmapDescription">
+            <h3 className="text-balance text-xl lg:text-2xl font-bold text-neutral-900 mb-4 line-clamp-2" aria-describedby="roadmapDescription">
               {roadmap.title}
             </h3>
             <p id="roadmapDescription" className="text-pretty text-sm mb-6">
@@ -52,36 +61,9 @@ export default function RoadmapItem({roadmap, onDelete}: Props) {
                     <Button>
                         Edit
                     </Button>
-                    <Button variant="destructive" onClick={() => onDelete?.(roadmap.id)}>
+                    <Button variant="destructive" onClick={() => onDelete?.(roadmap.id, roadmap.title)}>
                         Delete
                     </Button>
-                </div>
-            )}
-            {user?.role === 0 && (
-                <div className="flex flex-row items-start w-full gap-2">
-                    {recommendationPercentage === 0 ? (
-                        <span className="w-full text-sm text-neutral-500">
-                            No recommendation
-                        </span>
-                    ) : (
-                        <>
-                            {recommendationPercentage <= 40 && (
-                                <span className="w-full text-sm text-red-500">
-                                    Not Recommended
-                                </span>
-                            )}
-                            {recommendationPercentage > 40 && recommendationPercentage <= 60 && (
-                                <span className="w-full text-sm text-yellow-500">
-                                    Least Recommended
-                                </span>
-                            )}
-                            {recommendationPercentage > 60 && (
-                                <span className="w-full text-sm text-green-500">
-                                    Recommended
-                                </span>
-                            )}
-                        </>
-                    )}
                 </div>
             )}
           </CardFooter>

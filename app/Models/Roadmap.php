@@ -38,4 +38,5 @@ class Roadmap extends Model
     {
         return $this->hasMany(UserRoadmap::class);
     }
+
 }

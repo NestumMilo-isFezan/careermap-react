@@ -40,9 +40,9 @@ export default function Navbar() {
                 {!user ? (
                     <nav className="flex items-center gap-x-1 me-6">
                         <Link
-                            href="/"
+                            href={route('student.home')}
                             className={buttonVariants({
-                                variant: isActivePath('/') ? "navlinkActive" : "navlink"
+                                variant: isActivePath('/student/home') ? "navlinkActive" : "navlink"
                             })}
                         >
                             Home
@@ -67,7 +67,7 @@ export default function Navbar() {
                 ) : (
                     <div className="flex items-center gap-x-2">
                         <Link
-                            href="/"
+                            href={route('student.home')}
                             className={buttonVariants({
                                 variant: isActivePath('/student/home') ? "navlinkActive" : "navlink"
                             })}
@@ -75,28 +75,36 @@ export default function Navbar() {
                             Home
                         </Link>
                         <Link
-                            href="/student/roadmap"
+                            href={route('student.roadmap.index')}
                             className={buttonVariants({
-                                variant: isActivePath('/student/roadmap') ? "navlinkActive" : "navlink"
+                                variant: isActivePath('/student/roadmap/*') || isActivePath('/student/roadmap') ? "navlinkActive" : "navlink"
                             })}
                         >
                             Roadmap
                         </Link>
                         <Link
-                            href="/student/traits"
+                            href={route('student.traits.index')}
                             className={buttonVariants({
-                                variant: isActivePath('/student/traits') ? "navlinkActive" : "navlink"
+                                variant: isActivePath('/student/traits/*') || isActivePath('/student/traits') ? "navlinkActive" : "navlink"
                             })}
                         >
                             Traits
                         </Link>
                         <Link
-                            href="/student/resume"
+                            href={route('student.resume.index')}
                             className={buttonVariants({
-                                variant: isActivePath('/student/resume') ? "navlinkActive" : "navlink"
+                                variant: isActivePath('/student/resume/*') || isActivePath('/student/resume') ? "navlinkActive" : "navlink"
                             })}
                         >
                             Resume
+                        </Link>
+                        <Link
+                            href={route('student.curricular.index')}
+                            className={buttonVariants({
+                                variant: isActivePath('/student/curricular/*') || isActivePath('/student/curricular') ? "navlinkActive" : "navlink"
+                            })}
+                        >
+                            Curricular
                         </Link>
                     </div>
                 )
@@ -255,6 +263,15 @@ export default function Navbar() {
                                     })}
                                 >
                                     Resume
+                                </Link>
+                                <Link
+                                    href="/student/curricular"
+                                    className={buttonVariants({
+                                        variant: isActivePath('/student/curricular') ? "navlinkActive" : "navlink",
+                                        className: "w-full justify-start"
+                                    })}
+                                >
+                                    Curricular
                                 </Link>
                                 <div className="flex items-center gap-x-2 pt-4 border-t border-primary-foreground/20">
                                     <Avatar className="size-10 rounded-full border-2 border-emerald-900">

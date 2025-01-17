@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PersonaScore extends Model
 {
-    protected $fillable = ['student_id', 'persona_id', 'trait_result_id', 'score'];
+    protected $fillable = ['student_id', 'persona_id', 'score'];
 
     public function student(): BelongsTo
     {

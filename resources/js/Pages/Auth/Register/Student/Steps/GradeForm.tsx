@@ -32,7 +32,8 @@ export default function GradeForm({
     onSubmit
 }: GradeFormProps) {
     const handleNoTrialSPM = () => {
-        router.post(route('guest.register.students.skip-grades'));
+        form.reset();
+        router.get(route('guest.register.students.skip-grades'));
     };
 
     const handleGradeChange = (subjectId: number, grade: string) => {
@@ -133,7 +134,7 @@ export default function GradeForm({
                     </div>
                 </div>
 
-                <div className="flex justify-center p-4">
+                <div className="flex flex-col justify-center p-4">
                     <Button
                         type="submit"
                         disabled={form.processing || !areAllGradesFilled()}

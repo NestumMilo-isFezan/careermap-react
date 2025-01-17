@@ -38,7 +38,7 @@ export default function Index(
 ) {
     // Notfication
     const [notifications, setNotifications] = useState<NotificationData[]>([])
-    const displayDuration = 8000
+    const displayDuration = 4000
 
     const addNotification = (notification: Omit<NotificationData, 'id'>) => {
         const id = Date.now()
@@ -126,8 +126,10 @@ export default function Index(
     // Roadmap Deletion
     const [isAlertOpen, setIsAlertOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState<number | null>(null);
-    const handleDeleteClick = (id: number) => {
+    const [itemName, setItemName] = useState<string | null>(null);
+    const handleDeleteClick = (id: number, name: string) => {
         setItemToDelete(id);
+        setItemName(name);
         setIsAlertOpen(true);
     };
     const handleDeleteConfirm = () => {
@@ -137,6 +139,7 @@ export default function Index(
                 onSuccess: () => {
                     setIsAlertOpen(false);
                     setItemToDelete(null);
+                    setItemName(null);
                 },
             });
         }
@@ -198,7 +201,7 @@ export default function Index(
                             <>
                             <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 px-6 py-2">
                                 {roadmaps.data.map((roadmap : Roadmap) => (
-                                    <RoadmapItem roadmap={roadmap} onDelete={handleDeleteClick} />
+                                    <RoadmapItem roadmap={roadmap} onDelete={handleDeleteClick} key={roadmap.id} />
                                 ))}
                             </div>
                             <div className="flex items-center justify-center mt-8">
@@ -219,6 +222,7 @@ export default function Index(
                     onOpenChange={setIsAlertOpen}
                     onConfirm={handleDeleteConfirm}
                     itemId={itemToDelete}
+                    name={}
                 />
                 <div className="fixed inset-x-8 top-0 z-[99] flex max-w-full flex-col gap-2 bg-transparent px-6 py-6 md:bottom-0 md:left-[unset] md:right-0 md:top-[unset] md:max-w-sm">
                     {notifications.map(notification => (

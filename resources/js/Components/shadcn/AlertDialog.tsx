@@ -11,18 +11,23 @@ import {
 } from "@/shadcn/components/ui/alert-dialog";
 
 import { Button, buttonVariants } from "@/shadcn/components/ui/button";
+import { Trash } from "lucide-react";
 
 export const DestructiveAlert = (
     {
         isOpen,
         onOpenChange,
         onConfirm,
-        itemId
+        itemId,
+        name,
+        withIcon = false
     }: {
         isOpen: boolean,
         onOpenChange: (open: boolean) => void,
         onConfirm: () => void,
-        itemId: number | null
+        itemId: number | null,
+        name: string | null,
+        withIcon?: boolean
     }
 ) => {
     return (
@@ -31,7 +36,7 @@ export const DestructiveAlert = (
                     <AlertDialogHeader>
                     <AlertDialogTitle className="text-red-900">Are you absolutely sure?</AlertDialogTitle>
                     <AlertDialogDescription className="text-red-700">
-                        This action cannot be undone. This will permanently delete roadmap from the database.
+                        This action cannot be undone. This will permanently delete {name} from the database.
                     </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -42,6 +47,7 @@ export const DestructiveAlert = (
                             className={buttonVariants({ variant: "destructive" })}
                             onClick={onConfirm}
                         >
+                            {withIcon && <Trash className="size-4" />}
                             Delete
                         </AlertDialogAction>
                     </AlertDialogFooter>
