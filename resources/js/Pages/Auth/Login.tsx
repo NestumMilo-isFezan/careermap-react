@@ -44,7 +44,7 @@ export default function Login({
             )}
             <div className="flex flex-col space-y-2 text-center">
                 <h1 className="text-2xl font-semibold tracking-tight text-green-600">Sign in</h1>
-                <p className="text-sm text-emerald-300">Enter your details to sign in</p>
+                <p className="text-sm text-emerald-400">Enter your details to sign in</p>
             </div>
 
             <form onSubmit={submit}>
@@ -97,7 +97,7 @@ export default function Login({
                     {canResetPassword && (
                         <Link
                             href={route('password.request')}
-                            className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                            className="rounded-md text-sm text-emerald-600 underline hover:text-emerald-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
                         >
                             Forgot your password?
                         </Link>
@@ -117,6 +117,12 @@ export default function Login({
                     </Button>
                 </div>
             </form>
+
+            <div className="mt-4">
+                <p className="text-sm text-emerald-600">
+                    Don't have an account? <Link href={route('register')} className="text-emerald-900 underline hover:text-emerald-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2">Sign up</Link>
+                </p>
+            </div>
         </AuthLayout>
     );
 }

@@ -31,7 +31,7 @@ export default function ProfileForm({ form, user, onSubmit, onImageChange }: Pro
     const dummyImg = 'https://penguinui.s3.amazonaws.com/component-assets/3d-avatar-1.webp';
 
     return (
-        <form onSubmit={onSubmit} className="flex flex-col gap-8">
+        <form onSubmit={onSubmit} className="flex flex-col gap-6">
             <ProfileBanner
                 user={user}
                 profileImage={form.data.image ? URL.createObjectURL(form.data.image) : dummyImg}
@@ -41,7 +41,7 @@ export default function ProfileForm({ form, user, onSubmit, onImageChange }: Pro
                 errorMessage={form.errors.image}
             />
 
-            <div className="flex flex-col px-8 mt-4">
+            <div className="flex flex-col gap-6 px-4">
                 <div className="grid md:grid-cols-2 gap-6">
                     <DatePicker
                         date={form.data.birth_date}
@@ -62,38 +62,35 @@ export default function ProfileForm({ form, user, onSubmit, onImageChange }: Pro
                         label="Religion"
                         value={form.data.religion}
                         onChange={(value) => form.setData('religion', value)}
-                        className="py-4"
                         autoComplete="religion"
+                        required
                         errorMessage={form.errors.religion}
                     />
                     <FormField
                         label="Phone Number"
-                        type="tel"
                         value={form.data.phone}
                         onChange={(value) => form.setData('phone', value)}
-                        className="py-4"
                         autoComplete="phone"
+                        required
                         errorMessage={form.errors.phone}
                     />
                 </div>
 
-                <div className="flex flex-col gap-2">
-                    <FormField
-                        label="Address"
-                        type="textarea"
-                        value={form.data.address}
-                        onChange={(value) => form.setData('address', value)}
-                        autoComplete="address"
-                        errorMessage={form.errors.address}
-                    />
-                </div>
+                <FormField
+                    label="Address"
+                    type="textarea"
+                    value={form.data.address}
+                    onChange={(value) => form.setData('address', value)}
+                    autoComplete="address"
+                    errorMessage={form.errors.address}
+                />
 
                 <div className="grid md:grid-cols-2 gap-6">
                     <FormField
                         label="Postcode"
                         value={form.data.postcode}
                         onChange={(value) => form.setData('postcode', value)}
-                        autoComplete="postcode"
+                        autoComplete="postal-code"
                         errorMessage={form.errors.postcode}
                     />
                     <FormField
@@ -104,6 +101,7 @@ export default function ProfileForm({ form, user, onSubmit, onImageChange }: Pro
                         errorMessage={form.errors.city}
                     />
                 </div>
+
                 <div className="grid md:grid-cols-2 gap-6">
                     <FormField
                         label="State"
@@ -123,7 +121,6 @@ export default function ProfileForm({ form, user, onSubmit, onImageChange }: Pro
             </div>
 
             <div className="flex justify-center p-4">
-                 {/* Submit Button */}
                 <Button type="submit" disabled={form.processing} className="w-full" size="lg">
                     {form.processing ? (
                         <span className="flex items-center gap-2">

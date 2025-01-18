@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('roadmap_id')->constrained('roadmaps')->onDelete('cascade');
-            $table->enum('status', ['compatible', 'incompatible'])->default('incompatible');
+            $table->boolean('is_favourite')->default(false);
             $table->timestamps();
         });
     }

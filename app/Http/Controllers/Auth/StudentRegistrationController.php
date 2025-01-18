@@ -25,52 +25,17 @@ class StudentRegistrationController extends Controller
         $user = Auth::user();
         $step = 1;
 
-        // Initiate core subjects and stream subjects
-        $initiateCoreSubjects = [];
-        $initiateStreamSubjects = [];
-
-        $coreSubjects = Subject::where('stream_id', 1)->get();
-        foreach($coreSubjects as $subject){
-            if($subject->type === 'religious'){
-                continue;
-            }
-            $initiateCoreSubjects[] = [
-                'id' => $subject->id,
-                'name' => $subject->subject_name,
-                'short_name' => $subject->short_name,
-            ];
-        }
-
         // Determine current step based on user progress
         if ($user->profile) {
             $step = 2;
-            if ($user->student) {
-                $step = 3;
-                $streamSubjects = Subject::where('stream_id', $user->student->stream_id)->get();
-                foreach($streamSubjects as $subject){
-                    $initiateStreamSubjects[] = [
-                        'id' => $subject->id,
-                        'name' => $subject->subject_name,
-                        'short_name' => $subject->short_name,
-                    ];
-                }
-                if(strtolower($user->profile->religion) === 'islam'){
-                    $islamicSubject = Subject::where('subject_name', 'Pendidikan Islam')->first();
-                    $initiateCoreSubjects[] = [
-                        'id' => $islamicSubject->id,
-                        'name' => $islamicSubject->subject_name,
-                        'short_name' => $islamicSubject->short_name,
-                    ];
-                }
-                else{
-                    $moralSubject = Subject::where('subject_name', 'Pendidikan Moral')->first();
-                    $initiateCoreSubjects[] = [
-                        'id' => $moralSubject->id,
-                        'name' => $moralSubject->subject_name,
-                        'short_name' => $moralSubject->short_name,
-                    ];
-                }
-            }
+        }
+
+        if ($user->student) {
+            $step = 3;
+            $streamSubjects = $this->getStreamSubjects($user->student->stream_id);
+            $coreSubjects = $this->getCoreSubjects();
+            $coreSubjects = array_merge($coreSubjects, $this->getReligiousSubjects());
+            $optionalSubjects = $this->getOptionalSubjects();
         }
 
         $query = Classroom::query();
@@ -78,30 +43,27 @@ class StudentRegistrationController extends Controller
             $query->where('school_id', request('school_id'));
         }
         $classrooms = $query->get();
+        $classrooms = $classrooms->map(function($classroom){
+            return [
+                'id' => $classroom->id,
+                'name' => $classroom->name,
+            ];
+        })->toArray();
+
+        $streamName = Stream::find($user->student->stream_id)->name ?? null;
 
         return Inertia::render('Auth/Register/Student/WizardForm', [
             'user' => $user,
             'initialStep' => $step,
             'streams' => Stream::whereIn('id', [2, 3])->get(),
             'schools' => School::all(),
-            'classrooms' => $classrooms->map(fn($classroom) => [
-                'id' => $classroom->id,
-                'name' => $classroom->name,
-            ])->toArray(),
+            'classrooms' => $classrooms,
             'queryParams' => request()->query() ?: null,
-            'coreSubjects' => $initiateCoreSubjects,
-            'streamSubjects' => $initiateStreamSubjects,
-            'stream' => $user->student
-                ? Stream::find($user->student->stream_id)->name
-                : null,
+            'coreSubjects' => $coreSubjects,
+            'streamSubjects' => $streamSubjects,
+            'optionalSubjects' => $optionalSubjects,
+            'stream' => $streamName,
         ]);
-    }
-
-    public function getClassrooms(Request $request)
-    {
-        $school_id = $request->school_id;
-        $classrooms = Classroom::where('school_id', $school_id)->get();
-        return response()->json($classrooms);
     }
 
     public function storeProfile(Request $request)
@@ -147,7 +109,7 @@ class StudentRegistrationController extends Controller
             $user->save();
         }
 
-        return redirect()->back();
+        return to_route('guest.register.students');
     }
 
     public function storeStudent(Request $request)
@@ -173,7 +135,7 @@ class StudentRegistrationController extends Controller
         $validated = $request->validate([
             'grades' => 'required|array',
             'grades.*.subject_id' => 'required|exists:subjects,id',
-            'grades.*.grade' => 'required|string|in:A+,A,A-,B+,B,B-,C+,C,C-,D,E,F',
+            'grades.*.grade' => 'required|string|in:A+,A,A-,B+,B,C+,C,D,E,F,TH',
         ]);
 
         $userId = Auth::id();
@@ -200,7 +162,7 @@ class StudentRegistrationController extends Controller
         // Update user role
         $user->update(['role' => 0]);
 
-        return redirect()->route('home');
+        return to_route('home');
     }
 
     public function skipGrades()
@@ -209,6 +171,61 @@ class StudentRegistrationController extends Controller
         $user = User::find($userId);
         $user->update(['role' => 0]);
 
-        return redirect()->route('home');
+        return to_route('home');
+    }
+
+    private function getStreamSubjects($streamId)
+    {
+        return Subject::where('stream_id', $streamId)->get()->map(function($subject){
+            return [
+                'id' => $subject->id,
+                'name' => $subject->subject_name,
+                'short_name' => $subject->short_name,
+            ];
+        })->toArray();
+    }
+
+    private function getCoreSubjects()
+    {
+        return Subject::where('stream_id', 1)->get()->filter(function($subject){
+            return $subject->type !== 'religious';
+        })->map(function($subject){
+            return [
+                'id' => $subject->id,
+                'name' => $subject->subject_name,
+                'short_name' => $subject->short_name,
+            ];
+        })->toArray();
+    }
+
+    private function getReligiousSubjects()
+    {
+        $user = Auth::user();
+        return Subject::where('type', 'religious')->get()
+        ->filter(function($subject) use ($user){
+            if(strtolower($user->profile->religion) === 'islam'){
+                return $subject->subject_name === 'Islamic Studies';
+            }
+            else{
+                return $subject->subject_name === 'Moral';
+            }
+        })->map(function($subject){
+            return [
+                'id' => $subject->id,
+                'name' => $subject->subject_name,
+                'short_name' => $subject->short_name,
+            ];
+        })->toArray();
+    }
+
+    private function getOptionalSubjects()
+    {
+        return Subject::where('stream_id', 4)->get()->map(function($subject){
+            return [
+                'id' => $subject->id,
+                'name' => $subject->subject_name,
+                'short_name' => $subject->short_name,
+            ];
+        })->toArray();
     }
 }

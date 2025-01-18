@@ -48,7 +48,7 @@ const HeroButton = ({ href, variant, children }: HeroButtonProps) => {
                  before:-skew-x-12
                  hover:before:w-[150%]
                  [&>span]:relative [&>span]:z-10`,
-        secondary: "text-gray-500 rounded-full hover:bg-lime-200 hover:text-green-800 hover:underline"
+        secondary: "text-emerald-900 rounded-full hover:bg-lime-200 hover:text-emerald-900 hover:underline"
     };
 
     return (
@@ -58,7 +58,7 @@ const HeroButton = ({ href, variant, children }: HeroButtonProps) => {
         >
             {variant === 'primary' ? (
                 <span className="flex items-center">
-                    Progress Now
+                    {children}
                     <IconSwitch />
                 </span>
             ) : (
@@ -73,36 +73,40 @@ export default function Welcome({ auth }: PageProps) {
         <WebLayout>
             <Head title="Home - CareerMap" />
 
-            <section id="home_hero" className="px-2 py-12">
-                <div className="container items-center max-w-6xl px-8 mx-auto xl:px-5">
-                    <div className="flex flex-wrap items-center sm:-mx-3">
-                        <div className="w-full md:w-1/2 md:px-3">
-                            <div className="w-full pb-6 md:ms-7 space-y-2 sm:max-w-md lg:max-w-lg sm:pr-5 lg:pr-0 md:pb-0">
-                                <p className="mx-auto text-base text-gray-500 sm:max-w-md lg:text-xl md:max-w-3xl">
-                                    {'>'} Plan Your Future Carefully with
-                                </p>
-                                <h1 className="text-4xl font-cabinet font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-4xl lg:text-5xl xl:text-6xl">
-                                    <span className="block xl:inline bg-gradient-to-r from-green-600 via-green-500 to-green-400 bg-clip-text text-transparent">CAREER</span>
-                                    <br />
-                                    <span className="block xl:inline bg-gradient-to-r from-green-600 via-green-500 to-green-400 bg-clip-text text-transparent">MAP</span>
-                                </h1>
-                                <div className="relative flex flex-col sm:flex-row sm:space-x-4 mt-3">
+
+            <section id="resume_hero" className="px-18 py-12 md:py-0 md:pt-16">
+                <div className="w-full flex flex-col lg:flex-row items-center justify-center">
+                    <div className="w-full md:max-w-screen-sm">
+                        <div className="w-full flex flex-col justify-center items-center">
+                            <img
+                                src="/assets/home_img.png"
+                                alt="Career Map Illustration"
+                                className="h-1/3 lg:h-[70%] object-contain"
+                            />
+                        </div>
+                    </div>
+                    <div className="w-full md:w-1/3 pt-12 md:pt-0">
+                        <div className="flex flex-col space-y-2 items-center md:items-start justify-center">
+                            <p className="font-mono text-md lg:text-lg font-bold text-sky-500">
+                                {'>>'}
+                                <span className="text-sky-500">  Plan Your </span>
+                                <span className="text-white bg-emerald-500/70 px-0 lg:px-2 py-1 italic">Future</span>
+                                <span className="text-sky-500 hidden xl:inline">  Carefully </span>
+                                <span className="text-sky-500">  with... </span>
+                            </p>
+                            <div className="flex flex-col items-center justify-center font-cabinet font-extrabold text-6xl">
+                                <div className="flex flex-col">
+                                    <span className="text-green-500">CAREER</span>
+                                    <span className="text-green-500">MAP</span>
+                                </div>
+                            </div>
+                            <div className="relative flex flex-col lg:flex-row gap-2 lg:gap-4 pt-8">
                                     <HeroButton href="#_" variant="primary">
-                                        Progress Now
+                                        <span>Let's Start</span>
                                     </HeroButton>
                                     <HeroButton href="#_" variant="secondary">
                                         Watch News
                                     </HeroButton>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="w-full md:w-1/2">
-                            <div className="w-full h-auto overflow-hidden flex flex-row justify-center">
-                                <img
-                                    src="/assets/home_img.png"
-                                    alt="Career Map Illustration"
-                                    className="rounded-xl"
-                                />
                             </div>
                         </div>
                     </div>

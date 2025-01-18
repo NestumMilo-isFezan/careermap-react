@@ -6,14 +6,11 @@ use App\Models\Domain;
 use App\Models\Persona;
 use App\Models\Roadmap;
 use App\Models\Subject;
-use App\Models\Checklist;
-use App\Models\Milestone;
 use App\Models\Adaptation;
 use App\Models\Prerequisite;
 use App\Models\AdaptationItem;
 use Illuminate\Database\Seeder;
 use App\Models\PrerequisiteItem;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class RoadmapSeeder extends Seeder
 {
@@ -51,8 +48,8 @@ class RoadmapSeeder extends Seeder
             'roadmap_id' => $softwareEngineerRoadmap->id,
         ]);
         AdaptationItem::create([
-            'name' => 'Adaptation',
-            'persona_id' => Persona::where('name', 'Problem Solving')->first()->id,
+            'name' => 'Problem Solving Mindset',
+            'persona_id' => Persona::where('name', 'Creative')->first()->id,
             'adaptation_id' => $adaptation->id,
         ]);
 
@@ -91,13 +88,13 @@ class RoadmapSeeder extends Seeder
 
         AdaptationItem::create([
             'name' => 'Analytical Thinking',
-            'persona_id' => Persona::where('name', 'Problem solving')->first()->id,
+            'persona_id' => Persona::where('name', 'Dedicated')->first()->id,
             'adaptation_id' => $adaptation->id,
         ]);
 
         AdaptationItem::create([
             'name' => 'Organization Skills',
-            'persona_id' => Persona::where('name', 'Organization')->first()->id,
+            'persona_id' => Persona::where('name', 'Responsible')->first()->id,
             'adaptation_id' => $adaptation->id,
         ]);
 
@@ -130,13 +127,13 @@ class RoadmapSeeder extends Seeder
 
         AdaptationItem::create([
             'name' => 'Creative Thinking',
-            'persona_id' => Persona::where('name', 'Creativity')->first()->id,
+            'persona_id' => Persona::where('name', 'Creative')->first()->id,
             'adaptation_id' => $adaptation->id,
         ]);
 
         AdaptationItem::create([
             'name' => 'Open to New Ideas',
-            'persona_id' => Persona::where('name', 'Openness')->first()->id,
+            'persona_id' => Persona::where('name', 'Accepting')->first()->id,
             'adaptation_id' => $adaptation->id,
         ]);
 
@@ -155,8 +152,8 @@ class RoadmapSeeder extends Seeder
         ]);
 
         PrerequisiteItem::create([
-            'name' => 'Achieve A in Pendidikan Islam',
-            'subject_id' => Subject::where('subject_name', 'Pendidikan Islam')->first()->id,
+            'name' => 'Achieve A in Islamic Studies',
+            'subject_id' => Subject::where('subject_name', 'Islamic Studies')->first()->id,
             'prerequisite_id' => $trialsSPMPrerequisite->id,
             'requirement' => 'a'
         ]);
@@ -176,13 +173,13 @@ class RoadmapSeeder extends Seeder
 
         AdaptationItem::create([
             'name' => 'Strong Integrity',
-            'persona_id' => Persona::where('name', 'Integrity')->first()->id,
+            'persona_id' => Persona::where('name', 'Responsible')->first()->id,
             'adaptation_id' => $adaptation->id,
         ]);
 
         AdaptationItem::create([
             'name' => 'Dedication to Learning',
-            'persona_id' => Persona::where('name', 'Diligent')->first()->id,
+            'persona_id' => Persona::where('name', 'Constant Learner')->first()->id,
             'adaptation_id' => $adaptation->id,
         ]);
 
@@ -229,13 +226,13 @@ class RoadmapSeeder extends Seeder
 
         AdaptationItem::create([
             'name' => 'Problem Solving Skills',
-            'persona_id' => Persona::where('name', 'Problem solving')->first()->id,
+            'persona_id' => Persona::where('name', 'Creative')->first()->id,
             'adaptation_id' => $adaptation->id,
         ]);
 
         AdaptationItem::create([
-            'name' => 'Technical Creativity',
-            'persona_id' => Persona::where('name', 'Creativity')->first()->id,
+            'name' => 'Technical Mindset',
+            'persona_id' => Persona::where('name', 'Dedicated')->first()->id,
             'adaptation_id' => $adaptation->id,
         ]);
 
@@ -282,13 +279,13 @@ class RoadmapSeeder extends Seeder
 
         AdaptationItem::create([
             'name' => 'Technical Problem Solving',
-            'persona_id' => Persona::where('name', 'Problem solving')->first()->id,
+            'persona_id' => Persona::where('name', 'Creative')->first()->id,
             'adaptation_id' => $adaptation->id,
         ]);
 
         AdaptationItem::create([
             'name' => 'Analytical Mindset',
-            'persona_id' => Persona::where('name', 'Diligent')->first()->id,
+            'persona_id' => Persona::where('name', 'Dedicated')->first()->id,
             'adaptation_id' => $adaptation->id,
         ]);
 
@@ -327,14 +324,14 @@ class RoadmapSeeder extends Seeder
         ]);
 
         AdaptationItem::create([
-            'name' => 'Empathy and Compassion',
-            'persona_id' => Persona::where('name', 'Compassion')->first()->id,
+            'name' => 'Empathy and Understanding',
+            'persona_id' => Persona::where('name', 'Be Helpful')->first()->id,
             'adaptation_id' => $adaptation->id,
         ]);
 
         AdaptationItem::create([
             'name' => 'Active Listening',
-            'persona_id' => Persona::where('name', 'Communication')->first()->id,
+            'persona_id' => Persona::where('name', 'Self-Aware')->first()->id,
             'adaptation_id' => $adaptation->id,
         ]);
 
@@ -374,13 +371,13 @@ class RoadmapSeeder extends Seeder
 
         AdaptationItem::create([
             'name' => 'Research Mindset',
-            'persona_id' => Persona::where('name', 'Curiosity')->first()->id,
+            'persona_id' => Persona::where('name', 'Curious')->first()->id,
             'adaptation_id' => $adaptation->id,
         ]);
 
         AdaptationItem::create([
             'name' => 'Environmental Awareness',
-            'persona_id' => Persona::where('name', 'Conscientiousness')->first()->id,
+            'persona_id' => Persona::where('name', 'Responsible')->first()->id,
             'adaptation_id' => $adaptation->id,
         ]);
 
@@ -426,8 +423,8 @@ class RoadmapSeeder extends Seeder
         ]);
 
         AdaptationItem::create([
-            'name' => 'Empathy and Compassion',
-            'persona_id' => Persona::where('name', 'Compassion')->first()->id,
+            'name' => 'Teaching Passion',
+            'persona_id' => Persona::where('name', 'Be Helpful')->first()->id,
             'adaptation_id' => $adaptation->id,
         ]);
 
@@ -474,13 +471,13 @@ class RoadmapSeeder extends Seeder
 
         AdaptationItem::create([
             'name' => 'Patient Care',
-            'persona_id' => Persona::where('name', 'Compassion')->first()->id,
+            'persona_id' => Persona::where('name', 'Be Helpful')->first()->id,
             'adaptation_id' => $adaptation->id,
         ]);
 
         AdaptationItem::create([
             'name' => 'Reliability',
-            'persona_id' => Persona::where('name', 'Dependable')->first()->id,
+            'persona_id' => Persona::where('name', 'Responsible')->first()->id,
             'adaptation_id' => $adaptation->id,
         ]);
 
@@ -520,13 +517,13 @@ class RoadmapSeeder extends Seeder
 
         AdaptationItem::create([
             'name' => 'Environmental Stewardship',
-            'persona_id' => Persona::where('name', 'Conscientiousness')->first()->id,
+            'persona_id' => Persona::where('name', 'Responsible')->first()->id,
             'adaptation_id' => $adaptation->id,
         ]);
 
         AdaptationItem::create([
             'name' => 'Research Interest',
-            'persona_id' => Persona::where('name', 'Curiosity')->first()->id,
+            'persona_id' => Persona::where('name', 'Curious')->first()->id,
             'adaptation_id' => $adaptation->id,
         ]);
 
@@ -566,13 +563,13 @@ class RoadmapSeeder extends Seeder
 
         AdaptationItem::create([
             'name' => 'Innovation Mindset',
-            'persona_id' => Persona::where('name', 'Creativity')->first()->id,
+            'persona_id' => Persona::where('name', 'Creative')->first()->id,
             'adaptation_id' => $adaptation->id,
         ]);
 
         AdaptationItem::create([
             'name' => 'Quality Focus',
-            'persona_id' => Persona::where('name', 'Conscientiousness')->first()->id,
+            'persona_id' => Persona::where('name', 'Responsible')->first()->id,
             'adaptation_id' => $adaptation->id,
         ]);
 
@@ -619,7 +616,7 @@ class RoadmapSeeder extends Seeder
 
         AdaptationItem::create([
             'name' => 'Environmental Awareness',
-            'persona_id' => Persona::where('name', 'Conscientiousness')->first()->id,
+            'persona_id' => Persona::where('name', 'Responsible')->first()->id,
             'adaptation_id' => $adaptation->id,
         ]);
 
@@ -666,7 +663,7 @@ class RoadmapSeeder extends Seeder
 
         AdaptationItem::create([
             'name' => 'Research Mindset',
-            'persona_id' => Persona::where('name', 'Curiosity')->first()->id,
+            'persona_id' => Persona::where('name', 'Curious')->first()->id,
             'adaptation_id' => $adaptation->id,
         ]);
     }

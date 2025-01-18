@@ -79,7 +79,7 @@ export const DatePicker = ({
     label = "Birth Date",
     disabled = false
 }: DatePickerProps) => {
-    const [month, setMonth] = useState<Date>(new Date());
+    const [month, setMonth] = useState<Date>(date ? new Date(date) : new Date());
     const [open, setOpen] = useState(false);
 
     const handleMonthChange = (value: string) => {
@@ -127,6 +127,7 @@ export const DatePicker = ({
                             onSelect={handleSelect}
                             disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
                             month={month}
+                            onMonthChange={setMonth}
                             initialFocus
                             className="border-emerald-500"
                         />

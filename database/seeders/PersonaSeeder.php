@@ -14,100 +14,44 @@ class PersonaSeeder extends Seeder
     {
         $personas = [
             [
-                'name' => 'Creativity',
-                'description' => 'Ability to think outside the box and generate innovative solutions.',
+                'name' => 'Ambitious',
+                'description' => "Ambition is a personality trait that smart people tend to have. It’s a driving force that helps them achieve their goals and succeed in life.",
             ],
             [
                 'name' => 'Confidence',
-                'description' => 'Self-assured and certain about one\'s abilities and decisions.',
+                'description' => "Confidence is a quality that helps you feel good about yourself, your abilities, and your place in the world. It’s a skill that can be learned and practiced.",
             ],
             [
-                'name' => 'Honesty',
-                'description' => 'Being truthful and maintaining integrity in all interactions.',
+                'name' => 'Constant Learner',
+                'description' => "Constant Learner is a personality trait that applying the concept of always expanding the knowledge to gain new skills and expertise.",
             ],
             [
-                'name' => 'Conscientiousness',
-                'description' => 'Being thorough, careful, and vigilant in work and responsibilities.',
+                'name' => 'Creative',
+                'description' => 'Creativity is an important characteristic of successful professionals. It can help you solve problems, come up with new ideas, and communicate more effectively.',
             ],
             [
-                'name' => 'Dependable',
-                'description' => 'Reliable and trustworthy in fulfilling obligations and commitments.',
+                'name' => 'Curious',
+                'description' => 'Curious people often look for opportunities to learn more about situations and places.',
             ],
             [
-                'name' => 'Communication',
-                'description' => 'Effective exchange of information and ideas with others.',
+                'name' => 'Dedicated',
+                'description' => 'Dedicated is a person who puts a lot of energy, time, efforts, etc. to something that he/she believes is important.',
             ],
             [
-                'name' => 'Integrity',
-                'description' => 'Strong adherence to moral and ethical principles.',
+                'name' => 'Be Helpful',
+                'description' => 'Being helpful in a career involves consistently providing value, support, or assistance to others within your professional environment.',
             ],
             [
-                'name' => 'Loyalty',
-                'description' => 'Strong feeling of support and allegiance.',
-            ],
-            [
-                'name' => 'Organization',
-                'description' => 'Ability to plan, arrange, and manage tasks efficiently.',
-            ],
-            [
-                'name' => 'Problem solving',
-                'description' => 'Ability to find solutions to difficult or complex issues.',
-            ],
-            [
-                'name' => 'Motivation',
-                'description' => 'Inner drive and enthusiasm to achieve goals.',
-            ],
-            [
-                'name' => 'Teamwork',
-                'description' => 'Ability to work collaboratively with others towards common goals.',
-            ],
-            [
-                'name' => 'Agreeableness',
-                'description' => 'Being friendly, cooperative, and compassionate towards others.',
-            ],
-            [
-                'name' => 'Compassion',
-                'description' => 'Showing concern and empathy for others\' well-being.',
-            ],
-            [
-                'name' => 'Humble',
-                'description' => 'Modest and respectful in behavior and attitude.',
-            ],
-            [
-                'name' => 'Leadership',
-                'description' => 'Ability to guide and inspire others towards achieving goals.',
-            ],
-            [
-                'name' => 'Openness',
-                'description' => 'Receptive to new ideas, experiences, and perspectives.',
+                'name' => 'Self-Aware',
+                'description' => 'Self-awareness is the ability to recognize your strengths and weaknesses, and it’s a crucial part of being able to make good decisions about where you want to go professionally.',
             ],
             [
                 'name' => 'Responsible',
-                'description' => 'Taking ownership of actions and their consequences.',
+                'description' => 'Being responsible in a career means consistently demonstrating reliability, accountability, and a commitment to fulfilling professional duties and expectations.',
             ],
             [
-                'name' => 'Team player',
-                'description' => 'Works well with others and contributes to group success.',
-            ],
-            [
-                'name' => 'Flexibility',
-                'description' => 'Ability to adapt to changing circumstances and requirements.',
-            ],
-            [
-                'name' => 'Ambition',
-                'description' => 'Strong desire and determination to achieve goals.',
-            ],
-            [
-                'name' => 'Curiosity',
-                'description' => 'Eager to learn and explore new concepts and ideas.',
-            ],
-            [
-                'name' => 'Determined',
-                'description' => 'Firm resolution and persistence in pursuing goals.',
-            ],
-            [
-                'name' => 'Diligent',
-                'description' => 'Careful and persistent in work and effort.',
+                'name' => 'Accepting',
+                'description' => 'Accepting change is a fundamental skill for success in the workplace.',
             ],
         ];
 

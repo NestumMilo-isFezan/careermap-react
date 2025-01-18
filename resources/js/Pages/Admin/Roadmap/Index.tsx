@@ -222,7 +222,7 @@ export default function Index(
                     onOpenChange={setIsAlertOpen}
                     onConfirm={handleDeleteConfirm}
                     itemId={itemToDelete}
-                    name={}
+                    name={itemName}
                 />
                 <div className="fixed inset-x-8 top-0 z-[99] flex max-w-full flex-col gap-2 bg-transparent px-6 py-6 md:bottom-0 md:left-[unset] md:right-0 md:top-[unset] md:max-w-sm">
                     {notifications.map(notification => (

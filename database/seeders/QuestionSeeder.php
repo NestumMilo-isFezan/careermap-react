@@ -12,214 +12,109 @@ class QuestionSeeder extends Seeder
     {
         $questions = [
             [
-                'title' => 'In a group project, how do you prefer to contribute?',
-                'question_1' => 'Generate innovative ideas and creative solutions',
-                'persona_1' => 'Creativity',
-                'question_2' => 'Ensure the team stays organized and on track',
-                'persona_2' => 'Organization'
+                'title' => 'When starting a new project, what drives you most?',
+                'question_1' => 'Setting challenging goals and pushing for excellence',
+                'persona_1' => 'Ambitious',
+                'question_2' => 'Understanding and improving your capabilities',
+                'persona_2' => 'Self-Aware'
             ],
             [
-                'title' => 'When facing a challenge, what is your typical approach?',
-                'question_1' => 'Take charge and guide others towards a solution',
-                'persona_1' => 'Leadership',
-                'question_2' => 'Analyze the problem carefully and methodically',
-                'persona_2' => 'Problem solving'
+                'title' => 'How do you approach learning new skills?',
+                'question_1' => 'Eagerly seek out new knowledge and opportunities',
+                'persona_1' => 'Constant Learner',
+                'question_2' => 'Explore with natural interest and inquisitiveness',
+                'persona_2' => 'Curious'
             ],
             [
-                'title' => 'How do you prefer to work on complex tasks?',
-                'question_1' => 'Explore new and unconventional approaches',
-                'persona_1' => 'Curiosity',
-                'question_2' => 'Persist until the task is completed perfectly',
-                'persona_2' => 'Diligent'
+                'title' => 'When facing challenges in a team, what\'s your typical response?',
+                'question_1' => 'Take initiative with self-assured decision-making',
+                'persona_1' => 'Confidence',
+                'question_2' => 'Offer assistance and support to team members',
+                'persona_2' => 'Be Helpful'
             ],
             [
-                'title' => 'In a team discussion, what role do you usually take?',
-                'question_1' => 'Share ideas openly and encourage others to do the same',
-                'persona_1' => 'Openness',
-                'question_2' => 'Listen carefully and build on others\' contributions',
-                'persona_2' => 'Team player'
-            ],
-            [
-                'title' => 'When starting a new project, what matters most to you?',
-                'question_1' => 'Setting ambitious goals and pushing boundaries',
-                'persona_1' => 'Ambition',
-                'question_2' => 'Ensuring everyone\'s voice is heard and considered',
-                'persona_2' => 'Compassion'
-            ],
-            [
-                'title' => 'How do you handle project deadlines?',
-                'question_1' => 'Take responsibility for ensuring everything is completed',
+                'title' => 'How do you handle project responsibilities?',
+                'question_1' => 'Ensure all tasks are completed reliably',
                 'persona_1' => 'Responsible',
-                'question_2' => 'Adapt quickly to changing requirements',
-                'persona_2' => 'Flexibility'
+                'question_2' => 'Commit fully until goals are achieved',
+                'persona_2' => 'Dedicated'
             ],
             [
-                'title' => 'When working with others, what do you value most?',
-                'question_1' => 'Building trust through consistent reliability',
-                'persona_1' => 'Dependable',
-                'question_2' => 'Maintaining strong ethical standards',
-                'persona_2' => 'Integrity'
+                'title' => 'When solving problems, what\'s your preferred approach?',
+                'question_1' => 'Think outside the box and generate innovative solutions',
+                'persona_1' => 'Creative',
+                'question_2' => 'Adapt and embrace new approaches',
+                'persona_2' => 'Accepting'
             ],
             [
-                'title' => 'How do you approach team conflicts?',
-                'question_1' => 'Find ways to cooperate and maintain harmony',
-                'persona_1' => 'Agreeableness',
-                'question_2' => 'Address issues directly and honestly',
-                'persona_2' => 'Honesty'
-            ],
-            [
-                'title' => 'What motivates you in your work?',
-                'question_1' => 'The drive to achieve excellence',
-                'persona_1' => 'Motivation',
-                'question_2' => 'Supporting and helping others succeed',
-                'persona_2' => 'Loyalty'
-            ],
-            [
-                'title' => 'How do you handle success?',
-                'question_1' => 'Share credit and celebrate team achievements',
-                'persona_1' => 'Humble',
-                'question_2' => 'Feel confident about your contributions',
-                'persona_2' => 'Confidence'
-            ],
-            [
-                'title' => 'When learning something new, what approach do you prefer?',
-                'question_1' => 'Explore and experiment independently',
-                'persona_1' => 'Creativity',
-                'question_2' => 'Follow a structured, methodical approach',
-                'persona_2' => 'Conscientiousness'
-            ],
-            [
-                'title' => 'In group discussions, how do you typically contribute?',
-                'question_1' => 'Express ideas clearly and effectively',
-                'persona_1' => 'Communication',
-                'question_2' => 'Guide the conversation towards solutions',
-                'persona_2' => 'Leadership'
-            ],
-            [
-                'title' => 'When facing obstacles, what is your typical response?',
-                'question_1' => 'Persist until you find a solution',
-                'persona_1' => 'Determined',
-                'question_2' => 'Seek innovative ways around the problem',
-                'persona_2' => 'Problem solving'
-            ],
-            [
-                'title' => 'How do you prefer to organize your work?',
-                'question_1' => 'Create detailed plans and schedules',
-                'persona_1' => 'Organization',
-                'question_2' => 'Adapt and adjust as needed',
-                'persona_2' => 'Flexibility'
-            ],
-            [
-                'title' => 'What aspect of teamwork do you value most?',
-                'question_1' => 'Supporting others and building relationships',
-                'persona_1' => 'Teamwork',
-                'question_2' => 'Achieving goals efficiently',
-                'persona_2' => 'Ambition'
-            ],
-            [
-                'title' => 'How do you approach decision-making?',
-                'question_1' => 'Consider all perspectives carefully',
-                'persona_1' => 'Conscientiousness',
-                'question_2' => 'Trust your instincts and take initiative',
-                'persona_2' => 'Confidence'
-            ],
-            [
-                'title' => 'What drives you to improve?',
-                'question_1' => 'Curiosity about new possibilities',
-                'persona_1' => 'Curiosity',
-                'question_2' => 'Commitment to excellence',
-                'persona_2' => 'Diligent'
-            ],
-            [
-                'title' => 'How do you handle responsibility?',
-                'question_1' => 'Take ownership and ensure completion',
-                'persona_1' => 'Responsible',
-                'question_2' => 'Share tasks and collaborate effectively',
-                'persona_2' => 'Team player'
-            ],
-            [
-                'title' => 'What matters most in communication?',
-                'question_1' => 'Being direct and truthful',
-                'persona_1' => 'Honesty',
-                'question_2' => 'Being diplomatic and considerate',
-                'persona_2' => 'Compassion'
-            ],
-            [
-                'title' => 'How do you approach challenges?',
-                'question_1' => 'With determination to succeed',
-                'persona_1' => 'Determined',
-                'question_2' => 'With openness to different approaches',
-                'persona_2' => 'Openness'
-            ],
-            [
-                'title' => 'What do you prioritize in team relationships?',
-                'question_1' => 'Building trust and reliability',
-                'persona_1' => 'Dependable',
-                'question_2' => 'Fostering cooperation and harmony',
-                'persona_2' => 'Agreeableness'
+                'title' => 'What motivates you to improve at work?',
+                'question_1' => 'The desire to continuously expand knowledge',
+                'persona_1' => 'Constant Learner',
+                'question_2' => 'The drive to achieve ambitious goals',
+                'persona_2' => 'Ambitious'
             ],
             [
                 'title' => 'How do you contribute to team success?',
-                'question_1' => 'By maintaining high ethical standards',
-                'persona_1' => 'Integrity',
-                'question_2' => 'By motivating and inspiring others',
-                'persona_2' => 'Motivation'
+                'question_1' => 'Support others and provide assistance',
+                'persona_1' => 'Be Helpful',
+                'question_2' => 'Take ownership of responsibilities',
+                'persona_2' => 'Responsible'
             ],
             [
-                'title' => 'What approach do you take to problem-solving?',
-                'question_1' => 'Think creatively and outside the box',
-                'persona_1' => 'Creativity',
-                'question_2' => 'Analyze systematically and thoroughly',
-                'persona_2' => 'Problem solving'
+                'title' => 'When facing new situations, what\'s your approach?',
+                'question_1' => 'Embrace change and adapt readily',
+                'persona_1' => 'Accepting',
+                'question_2' => 'Investigate and learn from the experience',
+                'persona_2' => 'Curious'
             ],
             [
-                'title' => 'How do you handle team leadership?',
-                'question_1' => 'Guide and inspire others',
-                'persona_1' => 'Leadership',
-                'question_2' => 'Support and empower team members',
-                'persona_2' => 'Loyalty'
-            ],
-            [
-                'title' => 'What matters most in personal growth?',
-                'question_1' => 'Continuous learning and exploration',
-                'persona_1' => 'Curiosity',
-                'question_2' => 'Building character and integrity',
-                'persona_2' => 'Humble'
-            ],
-            [
-                'title' => 'How do you approach collaboration?',
-                'question_1' => 'Focus on effective communication',
-                'persona_1' => 'Communication',
-                'question_2' => 'Ensure reliable contribution',
-                'persona_2' => 'Dependable'
-            ],
-            [
-                'title' => 'What drives your work ethic?',
-                'question_1' => 'Desire for excellence',
-                'persona_1' => 'Diligent',
-                'question_2' => 'Commitment to team success',
-                'persona_2' => 'Teamwork'
-            ],
-            [
-                'title' => 'How do you handle feedback?',
-                'question_1' => 'Accept it with humility',
-                'persona_1' => 'Humble',
-                'question_2' => 'Use it as motivation to improve',
-                'persona_2' => 'Motivation'
+                'title' => 'How do you handle project challenges?',
+                'question_1' => 'Persist with dedication until resolved',
+                'persona_1' => 'Dedicated',
+                'question_2' => 'Apply creative thinking to find solutions',
+                'persona_2' => 'Creative'
             ],
             [
                 'title' => 'What\'s your approach to personal development?',
-                'question_1' => 'Set ambitious goals',
-                'persona_1' => 'Ambition',
-                'question_2' => 'Focus on continuous improvement',
-                'persona_2' => 'Conscientiousness'
+                'question_1' => 'Understand and work on your limitations',
+                'persona_1' => 'Self-Aware',
+                'question_2' => 'Face challenges with self-assurance',
+                'persona_2' => 'Confidence'
             ],
             [
-                'title' => 'How do you handle team dynamics?',
-                'question_1' => 'Promote harmony and cooperation',
-                'persona_1' => 'Agreeableness',
-                'question_2' => 'Ensure clear communication',
-                'persona_2' => 'Communication'
+                'title' => 'How do you approach learning opportunities?',
+                'question_1' => 'With curiosity and eagerness to explore',
+                'persona_1' => 'Curious',
+                'question_2' => 'With commitment to master new skills',
+                'persona_2' => 'Dedicated'
+            ],
+            [
+                'title' => 'What drives your professional growth?',
+                'question_1' => 'The ambition to achieve greater things',
+                'persona_1' => 'Ambitious',
+                'question_2' => 'The desire to help others succeed',
+                'persona_2' => 'Be Helpful'
+            ],
+            [
+                'title' => 'How do you handle feedback?',
+                'question_1' => 'Use it for self-awareness and improvement',
+                'persona_1' => 'Self-Aware',
+                'question_2' => 'Accept and adapt to suggestions',
+                'persona_2' => 'Accepting'
+            ],
+            [
+                'title' => 'What\'s your approach to problem-solving?',
+                'question_1' => 'Take responsibility for finding solutions',
+                'persona_1' => 'Responsible',
+                'question_2' => 'Apply creative and innovative thinking',
+                'persona_2' => 'Creative'
+            ],
+            [
+                'title' => 'How do you face new challenges?',
+                'question_1' => 'With confidence in your abilities',
+                'persona_1' => 'Confidence',
+                'question_2' => 'With a commitment to continuous learning',
+                'persona_2' => 'Constant Learner'
             ]
         ];
 

@@ -38,6 +38,10 @@ Route::middleware(['auth', 'user_access:0'])->prefix('student')->name('student.'
     Route::delete('/traits/delete/assessment', [App\Http\Controllers\Student\TraitsController::class, 'destroy'])->name('traits.destroy');
 
     Route::get('/resume', [App\Http\Controllers\Student\ResumeController::class, 'index'])->name('resume.index');
+    Route::get('/resume/create', [App\Http\Controllers\Student\ResumeController::class, 'create'])->name('resume.create');
+    Route::post('/resume/create', [App\Http\Controllers\Student\ResumeController::class, 'store'])->name('resume.store');
+    Route::get('/resume/edit', [App\Http\Controllers\Student\ResumeController::class, 'edit'])->name('resume.edit');
+    Route::put('/resume/edit', [App\Http\Controllers\Student\ResumeController::class, 'update'])->name('resume.update');
 
     Route::get('/curricular', [App\Http\Controllers\Student\CurricularExchangeController::class, 'index'])->name('curricular.index');
     Route::post('/curricular', [App\Http\Controllers\Student\CurricularExchangeController::class, 'store'])->name('curricular.store');

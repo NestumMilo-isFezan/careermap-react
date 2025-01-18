@@ -43,6 +43,7 @@ interface WizardFormProps {
     classrooms?: any[];
     coreSubjects?: Subject[];
     streamSubjects?: Subject[];
+    optionalSubjects?: Subject[];
     stream?: string;
 }
 
@@ -55,6 +56,7 @@ export default function WizardForm({
     classrooms = [],
     coreSubjects = [],
     streamSubjects = [],
+    optionalSubjects = [],
     stream = ''
 }: WizardFormProps) {
     const [step, setStep] = useState(initialStep);
@@ -189,6 +191,7 @@ export default function WizardForm({
                                 form={gradesForm}
                                 coreSubjects={coreSubjects}
                                 streamSubjects={streamSubjects}
+                                optionalSubjects={optionalSubjects}
                                 streamName={stream}
                                 onSubmit={handleGradesSubmit}
                             />

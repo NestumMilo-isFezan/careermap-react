@@ -18,7 +18,8 @@ return new class extends Migration
             $table->foreignId('student_id')->constrained()->onDelete('cascade');
             $table->string('document')->nullable();
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
-            $table->enum('level', ['school', 'district', 'state', 'national', 'international'])->default('school'); //pending = 0, paid = 1, failed = 2 ('pending', 'paid', 'failed')->nullable();
+            $table->enum('level', ['school', 'district', 'state', 'national', 'international'])->default('school');
+            $table->enum('type', ['certificates', 'activities'])->default('certificates');
             $table->timestamps();
         });
 

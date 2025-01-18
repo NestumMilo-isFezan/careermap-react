@@ -14,6 +14,108 @@ import {
 import { Label } from '@/shadcn/components/ui/label';
 import { Input } from '@/shadcn/components/ui/input';
 import { Textarea } from '@/shadcn/components/ui/textarea';
+import { useEffect, useRef } from 'react';
+import { cn } from '@/shadcn/lib/utils';
+
+interface FormFieldProps {
+    label: string;
+    value?: string;
+    onChange?: (value: string) => void;
+    errorMessage?: string;
+    type?: string;
+    disabled?: boolean;
+    className?: string;
+    autoResize?: boolean;
+    required?: boolean;
+    autoComplete?: string;
+    isFocused?: boolean;
+    // ... any other existing props
+}
+
+export function FormField({
+    label,
+    value = '',
+    onChange,
+    errorMessage,
+    type = 'text',
+    disabled = false,
+    className = '',
+    autoResize = false,
+    required = false,
+    autoComplete = '',
+    isFocused = false,
+    ...props
+}: FormFieldProps) {
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+    const adjustHeight = () => {
+        if (textareaRef.current && autoResize) {
+            textareaRef.current.style.height = 'auto';
+            textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+        }
+    };
+
+    useEffect(() => {
+        if (type === 'textarea' && autoResize) {
+            adjustHeight();
+        }
+    }, [value, type, autoResize]);
+
+    return (
+        <div className="w-full">
+            <label className="block text-sm font-medium text-emerald-800 mb-1">
+                {label}
+            </label>
+            {type === 'textarea' ? (
+                <textarea
+                    ref={textareaRef}
+                    value={value}
+                    onChange={(e) => {
+                        onChange?.(e.target.value);
+                        if (autoResize) {
+                            adjustHeight();
+                        }
+                    }}
+                    disabled={disabled}
+                    className={cn(
+                        "w-full rounded-md border border-emerald-500 bg-stone-50 px-3 py-2",
+                        "text-sm placeholder:text-emerald-500",
+                        "focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-900/50",
+                        "disabled:cursor-not-allowed disabled:opacity-50",
+                        errorMessage && "border-red-500",
+                        className
+                    )}
+                    required={required}
+                    autoComplete={autoComplete}
+                    autoFocus={isFocused}
+                    {...props}
+                />
+            ) : (
+                <input
+                    type={type}
+                    value={value}
+                    onChange={(e) => onChange?.(e.target.value)}
+                    disabled={disabled}
+                    className={cn(
+                        "w-full rounded-md border border-emerald-500 bg-stone-50 px-3 py-2",
+                        "text-sm placeholder:text-emerald-500",
+                        "focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-900/50",
+                        "disabled:cursor-not-allowed disabled:opacity-50",
+                        errorMessage && "border-red-500",
+                        className
+                    )}
+                    required={required}
+                    autoComplete={autoComplete}
+                    autoFocus={isFocused}
+                    {...props}
+                />
+            )}
+            {errorMessage && (
+                <p className="mt-1 text-sm text-red-500">{errorMessage}</p>
+            )}
+        </div>
+    );
+}
 
 export const SelectOption = ({
     label,
@@ -38,7 +140,7 @@ export const SelectOption = ({
                 onValueChange={(value) => onValueChange(value)}
                 disabled={disabled}
             >
-                <SelectTrigger className="border-emerald-500 bg-stone-50 focus:border-emerald-500 focus:ring-emerald-500">
+                <SelectTrigger className="border-emerald-500 bg-stone-50 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-900">
                     <SelectValue placeholder={placeholder} />
                 </SelectTrigger>
                 <SelectContent className="border-emerald-500 bg-stone-50">
@@ -61,50 +163,3 @@ export const SelectOption = ({
         </div>
     )
 }
-
-export const FormField = ({
-    label,
-    type = "text",
-    placeholder,
-    value,
-    onChange,
-    className = "",
-    errorMessage,
-    disabled,
-    autoComplete,
-    isFocused,
-    required
-}: FormFieldInterface) => {
-    return (
-        <div className={'flex flex-col gap-2 ' + className}>
-            <Label className="text-emerald-800">{label}</Label>
-            {type === "textarea" ? (
-                <Textarea
-                    placeholder={placeholder || label}
-                    className={`border-emerald-500 bg-stone-50 focus:border-emerald-500 placeholder:text-emerald-500 focus:ring-emerald-500 ${className}`}
-                    value={value}
-                    onChange={e => onChange(e.target.value)}
-                    disabled={disabled}
-                    autoComplete={autoComplete}
-                    autoFocus={isFocused}
-                    required={required}
-                />
-            ) : (
-                <Input
-                    type={type}
-                    placeholder={placeholder || label}
-                    className={`border-emerald-500 bg-stone-50 focus:border-emerald-500 placeholder:text-emerald-500 focus:ring-emerald-500 ${className}`}
-                    value={value}
-                    onChange={e => onChange(e.target.value)}
-                    autoComplete={autoComplete}
-                    disabled={disabled}
-                    required={required}
-                    autoFocus={isFocused}
-                />
-            )}
-            {errorMessage && (
-                <p className="text-red-500 text-xs mb-3">{errorMessage}</p>
-            )}
-        </div>
-    );
-};

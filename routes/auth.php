@@ -74,9 +74,6 @@ Route::middleware(['auth', 'user_access:3'])->prefix('guest')->name('guest.')->g
     Route::get('register/students/skip-grades', [App\Http\Controllers\Auth\StudentRegistrationController::class, 'skipGrades'])
         ->name('register.students.skip-grades');
 
-    Route::get('api/classrooms/{school_id}', [App\Http\Controllers\Auth\StudentRegistrationController::class, 'getClassrooms'])
-        ->name('register.students.classrooms');
-
     Route::post('register/students/profile', [App\Http\Controllers\Auth\StudentRegistrationController::class, 'storeProfile'])
         ->name('register.students.profile.store');
     Route::post('register/students/details', [App\Http\Controllers\Auth\StudentRegistrationController::class, 'storeStudent'])
