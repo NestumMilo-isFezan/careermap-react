@@ -3,16 +3,18 @@
 namespace App\Http\Controllers\Student;
 
 
-use App\Http\Resources\Roadmap\UniversalCourseResource;
 use Inertia\Inertia;
 use App\Models\Course;
 use App\Models\Domain;
 use App\Models\Roadmap;
+use App\Models\UserRoadmap;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Services\RoadmapRecommendationService;
 use App\Http\Resources\RecommendedRoadmapResource;
 use App\Http\Resources\Roadmap\ModifiedCourseResource;
+use App\Http\Resources\Roadmap\UniversalCourseResource;
 
 class RoadmapController extends Controller
 {
@@ -32,21 +34,26 @@ class RoadmapController extends Controller
         ])->toArray();
 
         $roadmap = null;
-
         $query = Roadmap::query();
 
-        $recommendation = request('recommendation');
-        $name = request('name');
-        $domainId = request('domain_id');
+        // Get user's favorite roadmaps if favorites filter is active
+        if (request('favorites')) {
+            $query->whereHas('userRoadmaps', function($q) {
+                $q->where('user_id', Auth::user()->id);
+            });
+            $sortedRoadmap = $query->paginate(12);
+        } else {
+            $recommendation = request('recommendation');
+            $name = request('name');
+            $domainId = request('domain_id');
 
-        $sortedRoadmap = match(true) {
-            !empty($name) => $this->roadmapRecommendationService->recommendationProcess(null, $name),
-            !empty($domainId) => $this->roadmapRecommendationService->recommendationProcess(null, null, $domainId),
-            !empty($recommendation) => $this->roadmapRecommendationService->recommendationProcess($recommendation),
-            default => $this->roadmapRecommendationService->recommendationProcess()
-        };
-
-        $roadmaps = $query->paginate(12);
+            $sortedRoadmap = match(true) {
+                !empty($name) => $this->roadmapRecommendationService->recommendationProcess(null, $name),
+                !empty($domainId) => $this->roadmapRecommendationService->recommendationProcess(null, null, $domainId),
+                !empty($recommendation) => $this->roadmapRecommendationService->recommendationProcess($recommendation),
+                default => $this->roadmapRecommendationService->recommendationProcess()
+            };
+        }
 
         return Inertia::render('Student/Roadmap/Index',[
             'roadmaps' => RecommendedRoadmapResource::collection($sortedRoadmap),
@@ -81,7 +88,7 @@ class RoadmapController extends Controller
                 'universityCourses' => [
                     'id' => $institutionId,
                     'institution_name' => $institutionName,
-                    'courses' => $universityCourses->isEmpty() ? null : UniversalCourseResource::collection($universityCourses)
+                    'courses' => $universityCourses->isEmpty() ? collect() : UniversalCourseResource::collection($universityCourses)
                 ],
                 'foundationCourse' => [
                     'id' => $institutionId . '-foundation',
@@ -99,13 +106,29 @@ class RoadmapController extends Controller
         ]);
     }
 
-    public function store(Request $request, $roadmapId)
+    public function store(Request $request)
     {
-        //
+        UserRoadmap::create([
+            'user_id' => $request->user()->id,
+            'roadmap_id' => $request->roadmap_id,
+        ]);
     }
 
-    public function destroy($roadmapId)
+    public function destroy($id)
     {
-        //
+        UserRoadmap::where('user_id', Auth::user()  ->id)
+            ->where('roadmap_id', $id)
+            ->delete();
+
+        return redirect()->back();
+    }
+
+    public function unfavorite($id)
+    {
+        UserRoadmap::where('user_id', Auth::user()->id)
+            ->where('roadmap_id', $id)
+            ->delete();
+
+        return redirect()->back();
     }
 }

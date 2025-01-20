@@ -23,9 +23,4 @@ class UserRoadmap extends Model
     {
         return $this->belongsTo(Roadmap::class);
     }
-
-    public function userMilestones(): HasMany
-    {
-        return $this->hasMany(UserMilestone::class);
-    }
 }

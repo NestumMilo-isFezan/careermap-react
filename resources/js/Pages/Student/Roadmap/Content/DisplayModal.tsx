@@ -144,7 +144,7 @@ export default function DisplayModal({ id }: { id: string }) {
 
                                                 </div>
                                                 <div className="flex flex-row gap-2 items-center">
-                                                    <p className="text-sm text-emerald-900 font-black">{roadmap?.recommendation_score ?? 0}%</p>
+                                                    <p className="text-sm text-emerald-900 font-black">{roadmap?.recommendation_score ? roadmap?.recommendation_score.toFixed(2) : '0.00'}%</p>
                                                     <Progress value={roadmap?.recommendation_score ?? 0} className="w-full bg-emerald-100/20 border border-emerald-800 rounded-md" />
                                                 </div>
                                             </div>
@@ -243,7 +243,7 @@ export default function DisplayModal({ id }: { id: string }) {
 
                                         </div>
                                         <div className="flex flex-row gap-2 items-center">
-                                            <p className="text-sm text-emerald-900 font-black">{roadmap?.recommendation_score ?? 0}%</p>
+                                            <p className="text-sm text-emerald-900 font-black">{roadmap?.recommendation_score ? roadmap?.recommendation_score.toFixed(2) : '0.00'}%</p>
                                             <Progress value={roadmap?.recommendation_score ?? 0} className="w-full bg-emerald-100/20 border border-emerald-800 rounded-md" />
                                         </div>
                                     </div>

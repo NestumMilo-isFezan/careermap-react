@@ -247,7 +247,6 @@ export function useFlowData(id: string) {
                     },
                 ];
 
-
                 const edges: Edge[] = [
                     {
                         id: 'edge-user-subject',
@@ -351,6 +350,9 @@ export function useFlowData(id: string) {
                     },
                 ];
 
+
+
+
                 // Push Data
                 prerequisites.forEach((prerequisite: Prerequisite, index: number) => {
                     nodes.push({
@@ -403,6 +405,28 @@ export function useFlowData(id: string) {
                     parentId: 'subflow-4',
                     extent: 'parent'
                 });
+
+
+                if(universityCourses.courses.length === 0) {
+                    nodes.push({
+                        id: 'title-no-course',
+                        position: { x: 180, y: 200 },
+                        type: 'roadmap',
+                        data: { label: 'No Course Available', category: 'university', },
+                        parentId: 'subflow-4',
+                        extent: 'parent'
+                    });
+                    edges.push({
+                        id: `edge-no-course-${universityCourses.id}`,
+                        source: `university-name-${universityCourses.id}`,
+                        target: 'title-no-course',
+                        type: 'university',
+                        sourceHandle: 'bottom-source',
+                        targetHandle: 'top-target',
+                        markerEnd: { type: MarkerType.ArrowClosed, width: 10, height: 10, color: '#F59E0B' },
+                        animated: true
+                    });
+                }
 
                 universityCourses.courses.forEach((course: UniversalCourse, index: number) => {
                     nodes.push({

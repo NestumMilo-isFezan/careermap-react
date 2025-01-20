@@ -27,6 +27,7 @@ import {
 import ViewModal from './Content/ViewModal';
 import RoadmapViewSkeleton from '@/Components/RoadmapViewSkeleton';
 import DisplayModal from './Content/DisplayModal';
+import { cn } from '@/shadcn/lib/utils';
 
 export default function Index({ roadmaps, domains, queryParams = null, roadmap_item = null }: { roadmaps: PaginatedData<Roadmap>, domains: Domain[], queryParams: any, roadmap_item: SelectedRoadmap | null }) {
     queryParams = queryParams ?? {};
@@ -65,6 +66,7 @@ export default function Index({ roadmaps, domains, queryParams = null, roadmap_i
     const [recommendationFilter, setRecommendationFilter] = useState('all');
     const [selectedRoadmap, setSelectedRoadmap] = useState<Roadmap | null>(null);
     const [isViewModalReady, setIsViewModalReady] = useState(false);
+    const [activeTab, setActiveTab] = useState<'recommended' | 'favorites'>('recommended');
 
     const viewRoadmap = (roadmap: Roadmap) => {
         setSelectedRoadmap(roadmap);
@@ -175,6 +177,45 @@ export default function Index({ roadmaps, domains, queryParams = null, roadmap_i
                                     </Button>
                                 )}
                             </div>
+                        </div>
+
+                        <div className="flex space-x-1 px-2 sm:px-6 mb-4">
+                            <button
+                                onClick={() => {
+                                    setActiveTab('recommended');
+                                    delete queryParams['favorites'];
+                                    router.get(route('student.roadmap.index'), queryParams, {
+                                        preserveState: true,
+                                        preserveScroll: true
+                                    });
+                                }}
+                                className={cn(
+                                    "px-4 py-2 text-sm font-medium rounded-lg focus:outline-none",
+                                    activeTab === 'recommended'
+                                        ? "bg-emerald-100 text-emerald-700 border border-emerald-200"
+                                        : "text-emerald-500 hover:text-emerald-700 hover:bg-emerald-50"
+                                )}
+                            >
+                                Recommended
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setActiveTab('favorites');
+                                    queryParams['favorites'] = true;
+                                    router.get(route('student.roadmap.index'), queryParams, {
+                                        preserveState: true,
+                                        preserveScroll: true
+                                    });
+                                }}
+                                className={cn(
+                                    "px-4 py-2 text-sm font-medium rounded-lg focus:outline-none",
+                                    activeTab === 'favorites'
+                                        ? "bg-emerald-100 text-emerald-700 border border-emerald-200"
+                                        : "text-emerald-500 hover:text-emerald-700 hover:bg-emerald-50"
+                                )}
+                            >
+                                Favorites
+                            </button>
                         </div>
 
                         {roadmaps && roadmaps.data.length > 0 ? (

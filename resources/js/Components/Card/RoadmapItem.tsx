@@ -1,11 +1,10 @@
 import { Roadmap } from "@/types";
 import { router, usePage, Link } from "@inertiajs/react";
-import { MapPin } from 'lucide-react'
+import { Heart } from 'lucide-react'
 import { Button, buttonVariants } from "@/shadcn/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/shadcn/components/ui/card";
+import { cn } from "@/shadcn/lib/utils";
 
-
-import { useState } from "react";
 import RoadmapIcon from "./RoadmapIcon";
 import RecommendationBadge from "./RecommendationBadge";
 
@@ -22,6 +21,21 @@ export default function RoadmapItem({roadmap, onDelete}: Props) {
     const recommendationPercentage = roadmap.recommendation_score ? roadmap.recommendation_score : 0;
 
     const user = usePage().props.auth.user ? usePage().props.auth.user : null;
+
+    const handleFavoriteClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (roadmap.is_favorite) {
+            router.delete(route('student.roadmap.favorite.destroy', roadmap.id), {
+                preserveScroll: true,
+            });
+        } else {
+            router.post(route('student.roadmap.store'), {
+                roadmap_id: roadmap.id
+            }, {
+                preserveScroll: true,
+            });
+        }
+    };
 
     return (
         <>
@@ -63,6 +77,26 @@ export default function RoadmapItem({roadmap, onDelete}: Props) {
                     </Link>
                     <Button variant="destructive" onClick={() => onDelete?.(roadmap.id, roadmap.title)}>
                         Delete
+                    </Button>
+                </div>
+            )}
+            {user?.role === 0 && (
+                <div className="flex justify-end w-full">
+                    <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={handleFavoriteClick}
+                        className={cn(
+                            "h-9 w-9",
+                            roadmap.is_favorite
+                                ? "bg-pink-100 text-pink-500 border-pink-500 hover:bg-pink-200 hover:text-pink-700"
+                                : "bg-slate-100 text-slate-500 border-slate-500 hover:bg-slate-200 hover:text-slate-700"
+                        )}
+                    >
+                        <Heart className={cn(
+                            "h-5 w-5",
+                            roadmap.is_favorite && "fill-current"
+                        )} />
                     </Button>
                 </div>
             )}

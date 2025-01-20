@@ -12,6 +12,7 @@ use App\Models\ExamSubject;
 use App\Models\ResumeSkill;
 use Illuminate\Http\Request;
 use App\Models\ResumeLanguage;
+use Illuminate\Support\Carbon;
 use App\Models\CurriculumPoint;
 use App\Models\ResumeEducation;
 use App\Models\ResumeSoftSkill;
@@ -236,8 +237,8 @@ class ResumeController extends Controller
                     return [
                         'school' => $education['school'],
                         'education_level' => $education['education_level'],
-                        'start_date' => $education['start_date'],
-                        'end_date' => $education['end_date'],
+                        'start_date' => Carbon::parse($education['start_date'])->format('Y-m-d'),
+                        'end_date' => Carbon::parse($education['end_date'])->format('Y-m-d'),
                         'resume_id' => $resume->id,
                     ];
                 })->toArray();
@@ -248,8 +249,8 @@ class ResumeController extends Controller
                     return [
                         'activity' => $experience['activity'],
                         'position' => $experience['position'],
-                        'start_date' => $experience['start_date'],
-                        'end_date' => $experience['end_date'],
+                        'start_date' => Carbon::parse($experience['start_date'])->format('Y-m-d'),
+                        'end_date' => Carbon::parse($experience['end_date'])->format('Y-m-d'),
                         'resume_id' => $resume->id,
                     ];
                 })->toArray();
@@ -259,7 +260,7 @@ class ResumeController extends Controller
                 $certificationRecords = collect($validated['certifications'])->map(function ($certification) use ($resume) {
                     return [
                         'certification' => $certification['certification'],
-                        'date_of_issue' => $certification['date_of_issue'],
+                        'date_of_issue' => Carbon::parse($certification['date_of_issue'])->format('Y-m-d'),
                         'resume_id' => $resume->id,
                     ];
                 })->toArray();
@@ -440,8 +441,8 @@ class ResumeController extends Controller
                     return [
                         'school' => $education['school'],
                         'education_level' => $education['education_level'],
-                        'start_date' => $education['start_date'],
-                        'end_date' => $education['end_date'],
+                        'start_date' => Carbon::parse($education['start_date'])->format('Y-m-d'),
+                        'end_date' => Carbon::parse($education['end_date'])->format('Y-m-d'),
                         'resume_id' => $resume->id,
                     ];
                 })->toArray();
@@ -452,8 +453,8 @@ class ResumeController extends Controller
                     return [
                         'activity' => $experience['activity'],
                         'position' => $experience['position'],
-                        'start_date' => $experience['start_date'],
-                        'end_date' => $experience['end_date'],
+                        'start_date' => Carbon::parse($experience['start_date'])->format('Y-m-d'),
+                        'end_date' => Carbon::parse($experience['end_date'])->format('Y-m-d'),
                         'resume_id' => $resume->id,
                     ];
                 })->toArray();
@@ -463,7 +464,7 @@ class ResumeController extends Controller
                 $certificationRecords = collect($validated['certifications'])->map(function ($certification) use ($resume) {
                     return [
                         'certification' => $certification['certification'],
-                        'date_of_issue' => $certification['date_of_issue'],
+                        'date_of_issue' => Carbon::parse($certification['date_of_issue'])->format('Y-m-d'),
                         'resume_id' => $resume->id,
                     ];
                 })->toArray();

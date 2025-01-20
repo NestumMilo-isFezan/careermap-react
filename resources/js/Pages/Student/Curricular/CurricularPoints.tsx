@@ -19,11 +19,6 @@ export default function CurricularPoints({ skillPoints }: { skillPoints: SkillPo
                         {/* Placeholder image - replace with your actual image */}
                         <img src="/assets/soft-skills-guy.png" alt="Soft Skills" className="h-full" />
                     </div>
-                    <div className="mt-4 text-center">
-                        <a href="#" className="text-blue-600 hover:text-blue-800 underline">
-                            What is traits?
-                        </a>
-                    </div>
                 </div>
 
                 {/* Right side with scrollable skills */}

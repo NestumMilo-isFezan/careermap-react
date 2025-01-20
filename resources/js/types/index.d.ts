@@ -61,6 +61,7 @@ export type Roadmap = {
     created_at: string;
     updated_at: string;
     recommendation_score?: number;
+    is_favorite?: boolean;
 }
 
 export type SoftSkill = {

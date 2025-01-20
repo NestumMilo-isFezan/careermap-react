@@ -36,6 +36,7 @@ Route::middleware(['auth', 'user_access:0'])->prefix('student')->name('student.'
 
     Route::get('/roadmap', [App\Http\Controllers\Student\RoadmapController::class, 'index'])->name('roadmap.index');
     Route::get('/roadmap/{roadmapId}', [App\Http\Controllers\Student\RoadmapController::class, 'show'])->name('roadmap.show');
+    Route::post('/roadmap', [App\Http\Controllers\Student\RoadmapController::class, 'store'])->name('roadmap.store');
 
     Route::get('/traits', [App\Http\Controllers\Student\TraitsController::class, 'index'])->name('traits.index');
     Route::get('/traits/assessment', [App\Http\Controllers\Student\TraitsController::class, 'create'])->name('traits.create');
@@ -56,6 +57,9 @@ Route::middleware(['auth', 'user_access:0'])->prefix('student')->name('student.'
     Route::get('/feedback', [App\Http\Controllers\Student\FeedbackController::class, 'index'])->name('feedback.index');
     Route::post('/feedback/{feedback}/respond', [App\Http\Controllers\Student\FeedbackController::class, 'respond'])->name('feedback.respond');
     Route::put('/feedback/{feedback}/update-response', [App\Http\Controllers\Student\FeedbackController::class, 'updateResponse'])->name('feedback.update-response');
+
+    Route::delete('/student/roadmap/{roadmap}/favorite', [App\Http\Controllers\Student\RoadmapController::class, 'unfavorite'])
+        ->name('roadmap.favorite.destroy');
 
 });
 

@@ -4,7 +4,7 @@ import { Head, router, Link } from '@inertiajs/react';
 import { PaginatedData, Domain } from '@/types';
 
 // Icons
-import { Plus, Search, PackageOpen, X, Pencil, Trash, ScrollText } from 'lucide-react';
+import { Plus, Search, PackageOpen, X, Pencil, Trash, ScrollText, ChevronUp, ChevronDown } from 'lucide-react';
 
 // Components
 import Pagination from '@/Components/Pagination';
@@ -135,6 +135,7 @@ export default function Index(
     const clearDomainFilter = () => {
         setDomainFilter('0');
         delete queryParams['domain_id'];
+        delete queryParams['page'];
         router.get(route('admin.course.index'), queryParams, { preserveState: true, preserveScroll: true });
     }
     const [domainFilter, setDomainFilter] = useState('0');
@@ -174,6 +175,34 @@ export default function Index(
 
     const handleDialogClose = () => {
         setIsDialogOpen(false);
+    };
+
+    const [levelFilter, setLevelFilter] = useState('0');
+    const [sortBy, setSortBy] = useState(queryParams?.sort_by || 'domain_id');
+    const [sortDirection, setSortDirection] = useState(queryParams?.sort_direction || 'asc');
+
+    const clearLevelFilter = () => {
+        setLevelFilter('0');
+        delete queryParams['level'];
+        router.get(route('admin.course.index'), queryParams, {
+            preserveState: true,
+            preserveScroll: true
+        });
+    }
+
+    const handleSort = (field: string) => {
+        const newDirection = sortBy === field && sortDirection === 'asc' ? 'desc' : 'asc';
+        setSortBy(field);
+        setSortDirection(newDirection);
+
+        queryParams['sort_by'] = field;
+        queryParams['sort_direction'] = newDirection;
+        delete queryParams['page'];
+
+        router.get(route('admin.course.index'), queryParams, {
+            preserveState: true,
+            preserveScroll: true
+        });
     };
 
     return (
@@ -223,7 +252,7 @@ export default function Index(
                                         type="text"
                                         placeholder="Search..."
                                         className="pl-10 border-emerald-500 placeholder:text-emerald-500 bg-white focus:border-emerald-500"
-                                        onBlur={ (e) => searchFieldChanged('name', e.target.value)}
+                                        onBlur={ (e) => { delete queryParams['page']; searchFieldChanged('name', e.target.value) } }
                                         onKeyDown={ (e) => onKeyPress('name', e)}
                                     />
                                     <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-emerald-500" />
@@ -231,7 +260,7 @@ export default function Index(
                                 <div className="flex flex-row gap-2 w-full max-w-sm">
                                     <Select
                                         value={domainFilter}
-                                        onValueChange={ (e) => { setDomainFilter(e); searchFieldChanged('domain_id', e) } }
+                                        onValueChange={ (e) => { setDomainFilter(e); delete queryParams['page']; searchFieldChanged('domain_id', e) } }
                                     >
                                         <SelectTrigger className="bg-white border-emerald-500 focus:border-emerald-500 text-emerald-500">
                                             <SelectValue placeholder="Domain Filter" />
@@ -252,6 +281,34 @@ export default function Index(
                                         </Button>
                                     )}
                                 </div>
+                                <div className="flex flex-row gap-2 w-full max-w-sm">
+                                    <Select
+                                        value={levelFilter}
+                                        onValueChange={(e) => {
+                                            setLevelFilter(e);
+                                            delete queryParams['page'];
+                                            searchFieldChanged('level', e);
+                                        }}
+                                    >
+                                        <SelectTrigger className="bg-white border-emerald-500 focus:border-emerald-500 text-emerald-500">
+                                            <SelectValue placeholder="Level Filter" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectGroup>
+                                                <SelectLabel className="text-emerald-500 font-bold">Course Level</SelectLabel>
+                                                <SelectItem value="0">All Levels</SelectItem>
+                                                <SelectItem value="foundation">Foundation</SelectItem>
+                                                <SelectItem value="diploma">Diploma</SelectItem>
+                                                <SelectItem value="bachelor">Bachelor</SelectItem>
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                    {levelFilter !== '0' && (
+                                        <Button onClick={clearLevelFilter} variant="destructive">
+                                            <X />
+                                        </Button>
+                                    )}
+                                </div>
                             </div>
                         </div>
                         <ScrollArea className="w-full rounded-xl px-6 py-2">
@@ -260,10 +317,46 @@ export default function Index(
                                     <TableHeader>
                                         <TableRow className="bg-emerald-500/80 hover:bg-emerald-500/40 transition-colors">
                                             <TableHead className="text-emerald-700 font-bold w-[5%] first:rounded-tl-lg">No</TableHead>
-                                            <TableHead className="text-emerald-700 font-bold w-[35%]">Course Details</TableHead>
+                                            <TableHead
+                                                className="text-emerald-700 font-bold w-[35%] cursor-pointer"
+                                                onClick={() => handleSort('course_name')}
+                                            >
+                                                <div className="flex items-center gap-2">
+                                                    Course Details
+                                                    {sortBy === 'course_name' && (
+                                                        sortDirection === 'asc' ?
+                                                        <ChevronUp className="h-4 w-4" /> :
+                                                        <ChevronDown className="h-4 w-4" />
+                                                    )}
+                                                </div>
+                                            </TableHead>
                                             <TableHead className="text-emerald-700 font-bold w-[20%]">Institution</TableHead>
-                                            <TableHead className="text-emerald-700 font-bold w-[15%]">Domain</TableHead>
-                                            <TableHead className="text-emerald-700 font-bold w-[15%]">Course Level</TableHead>
+                                            <TableHead
+                                                className="text-emerald-700 font-bold w-[15%] cursor-pointer"
+                                                onClick={() => handleSort('domain_id')}
+                                            >
+                                                <div className="flex items-center gap-2">
+                                                    Domain
+                                                    {sortBy === 'domain_id' && (
+                                                        sortDirection === 'asc' ?
+                                                        <ChevronUp className="h-4 w-4" /> :
+                                                        <ChevronDown className="h-4 w-4" />
+                                                    )}
+                                                </div>
+                                            </TableHead>
+                                            <TableHead
+                                                className="text-emerald-700 font-bold w-[15%] cursor-pointer"
+                                                onClick={() => handleSort('course_level')}
+                                            >
+                                                <div className="flex items-center gap-2">
+                                                    Course Level
+                                                    {sortBy === 'course_level' && (
+                                                        sortDirection === 'asc' ?
+                                                        <ChevronUp className="h-4 w-4" /> :
+                                                        <ChevronDown className="h-4 w-4" />
+                                                    )}
+                                                </div>
+                                            </TableHead>
                                             <TableHead className="text-emerald-700 font-bold w-[10%] last:rounded-tr-lg">Action</TableHead>
                                         </TableRow>
                                     </TableHeader>
@@ -335,7 +428,7 @@ export default function Index(
                         </ScrollArea>
                     </div>
 
-                    <DialogContent className="max-w-full h-screen overflow-y-auto bg-emerald-50 rounded-none">
+                    <DialogContent className="w-full max-w-screen h-screen bg-emerald-50">
                         <DialogHeader className="mb-0 pb-0">
                             <DialogTitle className="text-emerald-900">
                                 {dialogActionName === 'add' ? 'Add' : 'Edit'} Course
@@ -344,24 +437,26 @@ export default function Index(
                                 {dialogActionName === 'add' ? 'Add a new course' : 'Edit existing course'}
                             </DialogDescription>
                         </DialogHeader>
-                        <div
-                            id="course-form-container"
-                            className="w-full flex flex-col bg-yellow-50/50 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] min-h-[80vh] rounded-lg px-8 py-4 border border-primary"
-                        >
-                            <div className="w-full bg-emerald-100/50 border border-primary rounded-lg px-6 py-4">
-                                {isDialogOpen && dialogActionName === 'add' && (
-                                    <CourseForm domains={domains} />
-                                )}
-                                {isDialogOpen && dialogActionName === 'edit' && selectedCourse && (
-                                    <CourseEditForm
-                                        course={selectedCourse}
-                                        domains={domains}
-                                        onClose={() => {
-                                            setIsDialogOpen(false);
-                                            setSelectedCourse(undefined);
-                                        }}
-                                    />
-                                )}
+                        <div className="flex-1 overflow-y-auto">
+                            <div
+                                id="course-form-container"
+                                className="w-full flex flex-col bg-yellow-50/50 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] rounded-lg px-4 md:px-8 py-4 border border-primary"
+                            >
+                                <div className="w-full bg-emerald-100/50 border border-primary rounded-lg px-4 md:px-6 py-4">
+                                    {isDialogOpen && dialogActionName === 'add' && (
+                                        <CourseForm domains={domains} />
+                                    )}
+                                    {isDialogOpen && dialogActionName === 'edit' && selectedCourse && (
+                                        <CourseEditForm
+                                            course={selectedCourse}
+                                            domains={domains}
+                                            onClose={() => {
+                                                setIsDialogOpen(false);
+                                                setSelectedCourse(undefined);
+                                            }}
+                                        />
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </DialogContent>

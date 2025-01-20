@@ -5,14 +5,15 @@ namespace App\Http\Controllers\Admin\Course;
 use Inertia\Inertia;
 use App\Models\Course;
 use App\Models\Domain;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Imports\CoursesImport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CourseRequest;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Resources\CourseResource;
 use App\Services\CoursesManagementServices;
 use App\Services\CoursesDataReconcilationServices;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\CoursesImport;
 
 class CourseController extends Controller
 {
@@ -31,13 +32,33 @@ class CourseController extends Controller
         })->toArray();
 
         $course = Course::query();
+
+        // Name filter
         if(request()->has('name')){
             $course->where('course_name', 'like', '%'.request()->get('name').'%');
         }
+
+        // Domain filter
         if(request()->has('domain_id')){
             $course->where('domain_id', request()->get('domain_id'));
         }
-        $course = $course->orderBy('domain_id', 'asc')->paginate(10);
+
+        // Level filter
+        if(request()->has('level')){
+            $level = Str::title(request()->get('level'));
+            $course->where('course_level', $level);
+        }
+
+        // Sorting
+        $sortField = request()->get('sort_by', 'domain_id');
+        $sortDirection = request()->get('sort_direction', 'asc');
+
+        $allowedSortFields = ['course_name', 'domain_id', 'course_level'];
+        if (in_array($sortField, $allowedSortFields)) {
+            $course->orderBy($sortField, $sortDirection);
+        }
+
+        $course = $course->paginate(10);
 
         return Inertia::render('Admin/Course/Index', [
             'courses' => CourseResource::collection($course),

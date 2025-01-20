@@ -43,9 +43,11 @@ export default function Navbar({ openRatingModal, openReportBugModal }: NavbarPr
                 <div className="flex items-center gap-2">
                     <Link
                         href="/"
-                        className={buttonVariants({ variant: "title" })}
                     >
-                        CareerMap
+                        <div className="flex flex-row items-center gap-2">
+                            <img src="/assets/careermap.png" alt="CareerMap" className="size-10" />
+                            <h1 className="text-xl font-bold text-emerald-100">CareerMap</h1>
+                        </div>
                     </Link>
                 </div>
 

@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\Roadmap;
+use App\Models\UserRoadmap;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -26,6 +27,7 @@ class RecommendedRoadmapResource extends JsonResource
             'domain_name' => $this->domain->name,
             'domain_details' => $this->domain->description,
             'recommendation_score' => $this->recommendation_score,
+            'is_favorite' => $this->is_favorite,
         ];
     }
 }

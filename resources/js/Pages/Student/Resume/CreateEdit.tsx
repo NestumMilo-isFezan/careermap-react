@@ -2,7 +2,7 @@ import StudentLayout from "@/Layouts/StudentLayout";
 import { User } from "@/types";
 import { Head, usePage } from "@inertiajs/react";
 import { Button } from "@/shadcn/components/ui/button";
-import { Medal } from "lucide-react";
+import { ListRestart, Medal } from "lucide-react";
 import { FormField, SelectOption } from "@/Components/shadcn/Form/Components";
 import { DatePicker } from "@/Components/shadcn/Form/Calendar";
 import { useState, useEffect } from "react";
@@ -17,6 +17,8 @@ import { PDFViewer } from '@react-pdf/renderer';
 import ResumePDF from '@/Pages/Student/Resume/ResumePDF';
 import { Switch } from "@/shadcn/components/ui/switch";
 import { motion, AnimatePresence } from "motion/react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shadcn/components/ui/tooltip";
+import { TooltipProvider } from "@/shadcn/components/ui/tooltip";
 
 type ResumeFormData = {
     _method?: string;
@@ -201,11 +203,12 @@ export default function CreateEdit({ resumePrefillData, resumeEditData, edit = f
         post(routing, {
             onSuccess: () => {
                 console.log(edit ? 'Resume updated successfully' : 'Resume created successfully');
+                window.location.reload();
             },
             onError: (errors) => {
                 console.log('Validation errors:', errors);
             },
-            forceFormData: true
+            forceFormData: true,
         });
     };
 
@@ -256,6 +259,22 @@ export default function CreateEdit({ resumePrefillData, resumeEditData, edit = f
                                 </div>
                             </div>
                         </div>
+                        {edit && (
+                            <div className="flex flex-row items-center gap-x-4">
+                                <TooltipProvider>
+                                    <Tooltip>
+                                    <TooltipTrigger>
+                                        <Button variant="outline" size="icon" className="bg-yellow-100 text-amber-600 border-amber-600 hover:bg-yellow-600 hover:text-white">
+                                            <ListRestart className="w-4 h-4" />
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent className="bg-yellow-100 text-amber-600 border border-amber-600">
+                                        Reset Resume
+                                    </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
+                            </div>
+                        )}
                     </div>
 
                     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mt-4">
