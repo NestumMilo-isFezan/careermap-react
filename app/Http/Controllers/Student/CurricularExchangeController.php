@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Student;
 
 use Inertia\Inertia;
+use App\Models\SoftSkill;
 use App\Models\Curriculum;
 use Illuminate\Http\Request;
+use App\Models\CurriculumPoint;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Curriculum\CurriculumResource;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Resources\Curriculum\CurriculumResource;
 
 class CurricularExchangeController extends Controller
 {
@@ -28,11 +30,33 @@ class CurricularExchangeController extends Controller
             $query->where('level', request('level'));
         }
 
+        $points = CurriculumPoint::where('student_id', request()->user()->student->id)->get();
+
+        // Transform the points data to group by soft skill and sort by points
+        $skillPoints = SoftSkill::all()->map(function ($softSkill) use ($points) {
+            $totalPoints = $points->where('soft_skill_id', $softSkill->id)
+                ->sum('score');
+
+            return [
+                'name' => $softSkill->name,
+                'description' => $softSkill->description,
+                'points' => $totalPoints
+            ];
+        })
+        ->sortByDesc('points')
+        ->values()
+        ->all();
+
+        $exchangePoints = [
+            'value' => $skillPoints
+        ];
+
         $curriculums = $query->paginate(12);
 
         return Inertia::render('Student/Curricular/Index',[
             'curriculums' => CurriculumResource::collection($curriculums),
             'queryParams' => request()->query() ?: null,
+            'skillPoints' => $exchangePoints,
         ]);
     }
 
@@ -43,6 +67,7 @@ class CurricularExchangeController extends Controller
             'description' => 'required|string',
             'level' => 'required|string|in:school,district,state,national,international',
             'document' => 'required|file|mimes:pdf,doc,docx|max:10240',
+            'type' => 'required|string|in:certificates, activities',
         ]);
 
         $curriculum = new Curriculum([
@@ -50,6 +75,7 @@ class CurricularExchangeController extends Controller
             'description' => $validated['description'],
             'level' => $validated['level'],
             'status' => 'pending',
+            'type' => $validated['type'],
             'student_id' => $request->user()->student->id,
         ]);
 

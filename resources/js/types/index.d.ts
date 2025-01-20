@@ -63,6 +63,22 @@ export type Roadmap = {
     recommendation_score?: number;
 }
 
+export type SoftSkill = {
+    id: number;
+    name: string;
+    description: string;
+}
+
+
+interface CurriculumPoint {
+    id: number;
+    curriculum_id: number;
+    soft_skill_id: number;
+    score: number;
+    created_at: string;
+    updated_at: string;
+}
+
 export type Curriculum = {
     id: number;
     name: string;
@@ -70,9 +86,20 @@ export type Curriculum = {
     document_url: string;
     status: string;
     level: string;
+    type: string;
     student_id: number;
     created_at: string;
     updated_at: string;
+}
+
+export type News = {
+    id: number;
+    title: string;
+    description: string;
+    image: string;
+    created_at: string;
+    updated_at?: string;
+    image_preview?: string;
 }
 
 export type Domain = {

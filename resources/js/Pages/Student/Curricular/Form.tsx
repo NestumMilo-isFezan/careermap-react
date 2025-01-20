@@ -11,6 +11,7 @@ interface CurricularFormData {
     description: string;
     level: string;
     document: File | null;
+    type: string;
 }
 
 interface FormProps {
@@ -25,6 +26,7 @@ export default function Form({ curriculum, mode = 'create', onClose }: FormProps
         description: curriculum?.description || '',
         level: curriculum?.level || '',
         document: null,
+        type: curriculum?.type || '',
     });
 
     const levelOptions = [
@@ -33,6 +35,11 @@ export default function Form({ curriculum, mode = 'create', onClose }: FormProps
         { value: 'state', label: 'State' },
         { value: 'national', label: 'National' },
         { value: 'international', label: 'International' },
+    ];
+
+    const typeOptions = [
+        { value: 'certificates', label: 'Certificates' },
+        { value: 'activities', label: 'Activities' },
     ];
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -85,10 +92,21 @@ export default function Form({ curriculum, mode = 'create', onClose }: FormProps
                 disabled={processing}
             />
 
+            <SelectOption
+                label="Type"
+                value={data.type}
+                onValueChange={(value) => setData('type', value)}
+                options={typeOptions}
+                errorMessage={errors.type}
+                placeholder="Select type"
+                disabled={processing}
+            />
+
             <DocumentUploadField
                 onFileChange={(file) => setData('document', file)}
                 errorMessage={errors.document}
-                currentFileName={curriculum?.document_url}
+                label="Curricular Document"
+                hint="Upload the curricular document"
             />
 
             <Button type="submit" disabled={processing} className="w-full">

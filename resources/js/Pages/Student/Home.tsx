@@ -6,13 +6,14 @@ import { PageProps, PaginatedData, Roadmap, User } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 
+interface News {
+    title: string;
+    description: string;
+    image: string;
+    created_at: string;
+}
+
 const slides = [
-    {
-        imgSrc: 'https://penguinui.s3.amazonaws.com/component-assets/carousel/default-slide-1.webp',
-        imgAlt: 'Vibrant abstract painting with swirling blue and light pink hues on a canvas.',
-        title: 'Front end developers',
-        description: 'The architects of the digital world, constantly battling against their mortal enemy – browser compatibility.',
-    },
     {
         imgSrc: 'https://penguinui.s3.amazonaws.com/component-assets/carousel/default-slide-2.webp',
         imgAlt: 'Vibrant abstract painting with swirling red, yellow, and pink hues on a canvas.',
@@ -27,7 +28,7 @@ const slides = [
     },
 ];
 
-const Carousel = () => {
+const Carousel = ({ news }: { news: News[] }) => {
     const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
     const [slideDirection, setSlideDirection] = useState('left');
@@ -38,31 +39,31 @@ const Carousel = () => {
             if (!isPaused) {
                 setSlideDirection('left');
                 setCurrentSlideIndex((prev) =>
-                    prev === slides.length - 1 ? 0 : prev + 1
+                    prev === news.length - 1 ? 0 : prev + 1
                 );
             }
         }, autoplayIntervalTime);
 
         return () => clearInterval(interval);
-    }, [isPaused]);
+    }, [isPaused, news.length]);
 
     const previous = () => {
         setSlideDirection('right');
         setCurrentSlideIndex((prev) =>
-            prev === 0 ? slides.length - 1 : prev - 1
+            prev === 0 ? news.length - 1 : prev - 1
         );
     };
 
     const next = () => {
         setSlideDirection('left');
         setCurrentSlideIndex((prev) =>
-            prev === slides.length - 1 ? 0 : prev + 1
+            prev === news.length - 1 ? 0 : prev + 1
         );
     };
 
     return (
         <div className="relative w-full overflow-hidden rounded-xl">
-            <div className="relative min-h-[50svh] w-full ">
+            <div className="relative min-h-[50svh] w-full">
                 <button
                     onClick={previous}
                     className="absolute left-4 top-1/2 z-20 -translate-y-1/2 rounded-full bg-black/30 p-2 text-white hover:bg-black/50 focus:outline-none"
@@ -83,7 +84,7 @@ const Carousel = () => {
                     </svg>
                 </button>
 
-                {slides.map((slide, index) => (
+                {news.map((newsItem, index) => (
                     <div
                         key={index}
                         className={`absolute inset-0 w-full transform transition-transform duration-500 ease-in-out
@@ -103,16 +104,16 @@ const Carousel = () => {
                     >
                         <div className="lg:px-32 lg:py-14 absolute inset-0 z-10 flex flex-col items-center justify-end gap-2 bg-gradient-to-t from-neutral-950/85 to-transparent px-16 py-12 text-center">
                             <h3 className="w-full lg:w-[80%] text-balance text-2xl lg:text-3xl font-bold text-white">
-                                {slide.title}
+                                {newsItem.title}
                             </h3>
                             <p className="lg:w-1/2 w-full text-pretty text-sm text-neutral-300">
-                                {slide.description}
+                                {newsItem.description}
                             </p>
                         </div>
                         <img
                             className="absolute w-full h-full inset-0 object-cover text-neutral-600 dark:text-neutral-300 rounded-lg"
-                            src={slide.imgSrc}
-                            alt={slide.imgAlt}
+                            src={newsItem.image}
+                            alt={newsItem.title}
                         />
                     </div>
                 ))}
@@ -136,7 +137,7 @@ const Carousel = () => {
             </button>
 
             <div className="absolute rounded-md bottom-3 md:bottom-5 left-1/2 z-20 flex -translate-x-1/2 gap-4 md:gap-3 px-1.5 py-1 md:px-2">
-                {slides.map((_, index) => (
+                {news.map((_, index) => (
                     <button
                         key={index}
                         className={`size-2 cursor-pointer rounded-full transition ${
@@ -146,7 +147,7 @@ const Carousel = () => {
                             setSlideDirection(index > currentSlideIndex ? 'left' : 'right');
                             setCurrentSlideIndex(index);
                         }}
-                        aria-label={`slide ${index + 1}`}
+                        aria-label={`news ${index + 1}`}
                     />
                 ))}
             </div>
@@ -190,9 +191,10 @@ const HomeRoadmapCard = ({ roadmap }: { roadmap: Roadmap }) => {
 interface HomeProps {
     recommendations: PaginatedData<Roadmap>
     user: User
+    news: News[]
 }
 
-export default function Home({ recommendations, user }: HomeProps) {
+export default function Home({ recommendations, user, news }: HomeProps) {
 
     return (
         <StudentLayout>
@@ -209,7 +211,7 @@ export default function Home({ recommendations, user }: HomeProps) {
                     <h1 className="text-3xl font-extrabold text-emerald-900 text-center">
                         NEWS
                     </h1>
-                    <Carousel />
+                    <Carousel news={news} />
                 </div>
                 <div className="w-full md:px-4 mx-auto gap-4 pt-12">
                     <div className="w-full px-4 flex flex-col gap-4">

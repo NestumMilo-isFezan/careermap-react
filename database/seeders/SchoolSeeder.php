@@ -18,6 +18,7 @@ class SchoolSeeder extends Seeder
             'name' => 'SMK Menumbok',
             'address' => 'Jalan SMK Menumbok, 89857 Menumbok, Sabah',
             'phone' => '087-857123',
+            'image' => 'school-img/smkm.jpg',
             'email' => 'smkmenumbok@moe.gov.my',
             'referral_code' => 'SMKM001',
         ]);

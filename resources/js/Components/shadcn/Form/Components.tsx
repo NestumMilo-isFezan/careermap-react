@@ -14,7 +14,7 @@ import {
 import { Label } from '@/shadcn/components/ui/label';
 import { Input } from '@/shadcn/components/ui/input';
 import { Textarea } from '@/shadcn/components/ui/textarea';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, memo } from 'react';
 import { cn } from '@/shadcn/lib/utils';
 
 interface FormFieldProps {
@@ -29,6 +29,7 @@ interface FormFieldProps {
     required?: boolean;
     autoComplete?: string;
     isFocused?: boolean;
+    placeholder?: string;
     // ... any other existing props
 }
 
@@ -44,6 +45,7 @@ export function FormField({
     required = false,
     autoComplete = '',
     isFocused = false,
+    placeholder = '',
     ...props
 }: FormFieldProps) {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -88,6 +90,7 @@ export function FormField({
                     required={required}
                     autoComplete={autoComplete}
                     autoFocus={isFocused}
+                    placeholder={placeholder}
                     {...props}
                 />
             ) : (
@@ -107,6 +110,7 @@ export function FormField({
                     required={required}
                     autoComplete={autoComplete}
                     autoFocus={isFocused}
+                    placeholder={placeholder}
                     {...props}
                 />
             )}
@@ -117,7 +121,7 @@ export function FormField({
     );
 }
 
-export const SelectOption = ({
+export const SelectOption = memo(({
     label,
     placeholder,
     value,
@@ -162,4 +166,4 @@ export const SelectOption = ({
             )}
         </div>
     )
-}
+})

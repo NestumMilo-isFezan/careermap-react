@@ -36,6 +36,7 @@ class StudentRegistrationController extends Controller
             $coreSubjects = $this->getCoreSubjects();
             $coreSubjects = array_merge($coreSubjects, $this->getReligiousSubjects());
             $optionalSubjects = $this->getOptionalSubjects();
+            $streamName = Stream::find($user->student->stream_id)->name ?? null;
         }
 
         $query = Classroom::query();
@@ -50,8 +51,6 @@ class StudentRegistrationController extends Controller
             ];
         })->toArray();
 
-        $streamName = Stream::find($user->student->stream_id)->name ?? null;
-
         return Inertia::render('Auth/Register/Student/WizardForm', [
             'user' => $user,
             'initialStep' => $step,
@@ -59,10 +58,10 @@ class StudentRegistrationController extends Controller
             'schools' => School::all(),
             'classrooms' => $classrooms,
             'queryParams' => request()->query() ?: null,
-            'coreSubjects' => $coreSubjects,
-            'streamSubjects' => $streamSubjects,
-            'optionalSubjects' => $optionalSubjects,
-            'stream' => $streamName,
+            'coreSubjects' => $coreSubjects ?? null,
+            'streamSubjects' => $streamSubjects ?? null,
+            'optionalSubjects' => $optionalSubjects ?? null,
+            'stream' => $streamName ?? null,
         ]);
     }
 

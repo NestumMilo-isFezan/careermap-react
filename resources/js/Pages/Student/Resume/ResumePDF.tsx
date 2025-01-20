@@ -116,7 +116,6 @@ type ResumeFormData = {
     }>,
     soft_skills: Array<{
         soft_skill: string;
-        level: string;
     }>,
     languages: Array<{
         language: string;
@@ -205,7 +204,7 @@ export default function ResumePDF({ data }: Props) {
                         <View style={styles.divider} />
                         {data.soft_skills.map((skill, index) => (
                             <Text key={index} style={styles.skillItem}>
-                                {skill.soft_skill} - {capitalizeFirstLetter(skill.level)}
+                                {skill.soft_skill}
                             </Text>
                         ))}
                     </View>

@@ -1,6 +1,6 @@
 import { FormField } from '@/Components/shadcn/Form/Components';
 import AuthLayout from '@/Layouts/AuthLayout';
-import { Button } from '@/shadcn/components/ui/button';
+import { Button, buttonVariants } from '@/shadcn/components/ui/button';
 import { Spinner } from '@/shadcn/components/ui/spinner';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { UserPlus } from 'lucide-react';
@@ -104,15 +104,23 @@ export default function Register() {
                 </div>
 
                 <div className="mt-8 flex flex-col gap-2 items-start justify-end">
-                    <Link
-                        href={route('login')}
-                        className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    >
-                        Already registered?
-                    </Link>
+                    <div className="w-full flex flex-row items-center justify-between gap-2">
+                        <Link
+                            href={route('register.teacher')}
+                            className="rounded-md text-sm text-emerald-600 underline hover:text-emerald-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+                        >
+                            Register as a teacher
+                        </Link>
+                        <Link
+                            href={route('login')}
+                            className="rounded-md text-sm text-emerald-600 underline hover:text-emerald-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+                        >
+                            Already registered?
+                        </Link>
+                    </div>
 
                     {/* Submit Button */}
-                    <Button type="submit" disabled={processing} className="w-full" size="lg">
+                    <button type="submit" disabled={processing} className={buttonVariants({ variant: 'default', size: 'lg', className: 'w-full' })} data-pan="register-event">
                         {processing ? (
                             <span className="flex items-center gap-2">
                                 <Spinner className="mr-2 text-emerald-900" /> Registering...
@@ -122,7 +130,7 @@ export default function Register() {
                                 <UserPlus className="mr-2 size-6" /> Register
                             </span>
                         )}
-                    </Button>
+                    </button>
                 </div>
             </form>
         </AuthLayout>

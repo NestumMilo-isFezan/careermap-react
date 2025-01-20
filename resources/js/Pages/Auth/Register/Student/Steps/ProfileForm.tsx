@@ -61,6 +61,7 @@ export default function ProfileForm({ form, user, onSubmit, onImageChange }: Pro
                     <FormField
                         label="Religion"
                         value={form.data.religion}
+                        placeholder="Enter your religion"
                         onChange={(value) => form.setData('religion', value)}
                         autoComplete="religion"
                         required
@@ -69,6 +70,7 @@ export default function ProfileForm({ form, user, onSubmit, onImageChange }: Pro
                     <FormField
                         label="Phone Number"
                         value={form.data.phone}
+                        placeholder="Enter your phone number"
                         onChange={(value) => form.setData('phone', value)}
                         autoComplete="phone"
                         required
@@ -80,6 +82,7 @@ export default function ProfileForm({ form, user, onSubmit, onImageChange }: Pro
                     label="Address"
                     type="textarea"
                     value={form.data.address}
+                    placeholder="Enter your address"
                     onChange={(value) => form.setData('address', value)}
                     autoComplete="address"
                     errorMessage={form.errors.address}
@@ -89,6 +92,7 @@ export default function ProfileForm({ form, user, onSubmit, onImageChange }: Pro
                     <FormField
                         label="Postcode"
                         value={form.data.postcode}
+                        placeholder="Enter your postcode"
                         onChange={(value) => form.setData('postcode', value)}
                         autoComplete="postal-code"
                         errorMessage={form.errors.postcode}
@@ -96,6 +100,7 @@ export default function ProfileForm({ form, user, onSubmit, onImageChange }: Pro
                     <FormField
                         label="City"
                         value={form.data.city}
+                        placeholder="Enter your city"
                         onChange={(value) => form.setData('city', value)}
                         autoComplete="city"
                         errorMessage={form.errors.city}
@@ -106,6 +111,7 @@ export default function ProfileForm({ form, user, onSubmit, onImageChange }: Pro
                     <FormField
                         label="State"
                         value={form.data.state}
+                        placeholder="Enter your state"
                         onChange={(value) => form.setData('state', value)}
                         autoComplete="state"
                         errorMessage={form.errors.state}
@@ -113,6 +119,7 @@ export default function ProfileForm({ form, user, onSubmit, onImageChange }: Pro
                     <FormField
                         label="Country"
                         value={form.data.country}
+                        placeholder="Enter your country"
                         onChange={(value) => form.setData('country', value)}
                         autoComplete="country"
                         errorMessage={form.errors.country}

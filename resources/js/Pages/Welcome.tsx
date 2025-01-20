@@ -1,7 +1,7 @@
 import { PageProps } from '@/types';
 import WebLayout from '@/Layouts/WebLayout';
 import { Head } from '@inertiajs/react';
-import { Sparkles } from 'lucide-react';
+import { Boxes, FileCheck, MapPin, Sparkles } from 'lucide-react';
 
 interface HeroButtonProps {
     href: string;
@@ -73,8 +73,10 @@ export default function Welcome({ auth }: PageProps) {
         <WebLayout>
             <Head title="Home - CareerMap" />
 
-
-            <section id="resume_hero" className="px-18 py-12 md:py-0 md:pt-16">
+            <section
+                id="hero"
+                className="min-h-screen px-18 py-12 md:py-0 md:pt-16"
+            >
                 <div className="w-full flex flex-col lg:flex-row items-center justify-center">
                     <div className="w-full md:max-w-screen-sm">
                         <div className="w-full flex flex-col justify-center items-center">
@@ -108,6 +110,39 @@ export default function Welcome({ auth }: PageProps) {
                                         Watch News
                                     </HeroButton>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="about"
+                className="min-h-screen py-10 mb-20 bg-emerald-100"
+            >
+                <div className="container items-center max-w-6xl px-10 mx-auto sm:px-20 md:px-32 lg:px-16">
+                    <div className="flex flex-wrap items-center -mx-3">
+                        <div className="order-1 w-full px-3 lg:w-1/2 lg:order-0">
+                            <div className="w-full lg:max-w-md">
+                                <h2 className="mb-4 text-3xl font-bold leading-tight tracking-tight sm:text-4xl font-heading text-emerald-900">Fully-packed with all the tools you need to prepare for your future!</h2>
+                                <p className="mb-4 font-medium tracking-tight text-emerald-900/50 xl:mb-6">It's never been easier to plan your future. Our tools will help you with the following:</p>
+                                <div className="flex flex-col gap-2">
+                                    <div className="flex flex-row items-center py-2 space-x-4 xl:py-3">
+                                        <MapPin className="text-emerald-500 size-8" />
+                                        <span className="font-medium text-emerald-800/60">Optimized Career Path Recommendations</span>
+                                    </div>
+                                    <div className="flex flex-row items-center py-2 space-x-4 xl:py-3">
+                                        <FileCheck className="text-rose-500 size-8" />
+                                        <span className="font-medium text-emerald-800/60">Out of the Box Resume Builder</span>
+                                    </div>
+                                    <div className="flex flex-row items-center py-2 space-x-4 xl:py-3">
+                                        <Boxes className="text-sky-500 size-8" />
+                                        <span className="font-medium text-emerald-800/60">Rich Features To Know Yourself</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="w-full px-3 mb-12 lg:w-1/2 order-0 lg:order-1 lg:mb-0">
+                                <img className="mx-auto sm:max-w-sm lg:max-w-full" src="/assets/about.png" alt="feature image" />
                         </div>
                     </div>
                 </div>

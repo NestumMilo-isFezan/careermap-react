@@ -24,6 +24,7 @@ class CurriculumResource extends JsonResource
             'document_url' => $documentUrl,
             'status' => $this->status,
             'level' => $this->level,
+            'type' => $this->type,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

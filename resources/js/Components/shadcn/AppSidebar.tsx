@@ -40,12 +40,31 @@ import {
     ChevronRight,
     ChevronsUpDown,
     LogOut,
-    UserCog
+    UserCog,
+    UserRoundPen,
+    Star,
+    Bug
 } from "lucide-react";
+import { useState } from "react";
 
-export function AppSidebar() {
+interface AppSidebarProps {
+    openRatingModal: () => void;
+    openReportBugModal: () => void;
+}
+
+export function AppSidebar({ openRatingModal, openReportBugModal }: AppSidebarProps) {
     const { url } = usePage()
     const dummyUser = usePage().props.auth.user;
+    const [openDrawer, setOpenDrawer] = useState(() => {
+        const saved = localStorage.getItem('openDrawer');
+        return saved ? JSON.parse(saved) : false;
+    });
+
+    const handleOpenChange = (newOpen: boolean) => {
+        setOpenDrawer(newOpen);
+        localStorage.setItem('openDrawer', JSON.stringify(newOpen));
+    };
+
 
     // TODO: Menu items
     const items = [
@@ -57,7 +76,8 @@ export function AppSidebar() {
         },
         {
             title: "Users",
-            url: "#",
+            url: "/admin/user",
+            route: route('admin.user.index'),
             icon: UsersRound,
         },
         {
@@ -68,27 +88,25 @@ export function AppSidebar() {
         },
         {
             title: "Resources",
-            url: "#",
+            url: url.startsWith("/admin/course") ? "/admin/course" : "/admin/school",
             icon: FolderClosed,
             subItems: [
                 {
                     title: "Courses",
-                    url: "#",
+                    url: "/admin/course",
+                    route: route('admin.course.index'),
                 },
                 {
                     title: "Schools",
-                    url: "#",
+                    url: "/admin/school",
+                    route: "#",
                 },
             ],
         },
         {
-            title: "Resume Content",
-            url: "#",
-            icon: FileUser,
-        },
-        {
             title: "News Article",
-            url: "#",
+            url: "/admin/news",
+            route: route('admin.news.index'),
             icon: Newspaper,
         },
     ];
@@ -110,7 +128,7 @@ export function AppSidebar() {
                         </div>
                         <div className="grid flex-1 text-left text-sm leading-tight">
                             <span className="truncate font-semibold">CareerMap</span>
-                            <span className="truncate text-xs">Admin Page</span>
+                            <span className="truncate text-xs">Counsellor Dashboard</span>
                         </div>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -126,10 +144,10 @@ export function AppSidebar() {
                 <SidebarMenu>
                     {items.map((item, index) => (
                         item.subItems ? (
-                            <Collapsible className="group/collapsible">
+                            <Collapsible className="group/collapsible" open={openDrawer}>
                                 <SidebarMenuItem key={index}>
-                                    <CollapsibleTrigger asChild>
-                                        <SidebarMenuButton>
+                                    <CollapsibleTrigger asChild onClick={() => handleOpenChange(!openDrawer)}>
+                                        <SidebarMenuButton isActive={url.startsWith(item.url)}>
                                             <item.icon />
                                             <span>{item.title}</span>
                                             <ChevronRight
@@ -141,8 +159,10 @@ export function AppSidebar() {
                                         <SidebarMenuSub>
                                             {item.subItems.map((subItem, subIndex) => (
                                                 <SidebarMenuSubItem key={subIndex}>
-                                                    <SidebarMenuSubButton>
-                                                        <span>{subItem.title}</span>
+                                                    <SidebarMenuSubButton asChild isActive={url.startsWith(subItem.url)}>
+                                                        <Link href={subItem.url}>
+                                                            <span>{subItem.title}</span>
+                                                        </Link>
                                                     </SidebarMenuSubButton>
                                                 </SidebarMenuSubItem>
                                             ))}
@@ -207,11 +227,38 @@ export function AppSidebar() {
                             <DropdownMenuSeparator className="border border-emerald-600" />
                             <DropdownMenuGroup>
                                 <DropdownMenuLabel>
+                                    Support
+                                </DropdownMenuLabel>
+                                <DropdownMenuItem
+                                    className="hover:bg-emerald-600 hover:text-emerald-600-foreground"
+                                    onClick={openRatingModal}
+                                >
+                                    <Star />
+                                    <span>Rate and Comment</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    className="hover:bg-emerald-600 hover:text-emerald-600-foreground"
+                                    onClick={openReportBugModal}
+                                >
+                                    <Bug />
+                                    <span>Report a Bug</span>
+                                </DropdownMenuItem>
+                            </DropdownMenuGroup>
+                            <DropdownMenuGroup>
+                                <DropdownMenuLabel>
                                     Account
                                 </DropdownMenuLabel>
-                                <DropdownMenuItem className="hover:bg-emerald-600 hover:text-emerald-600-foreground">
-                                    <UserCog />
-                                    <span>Account</span>
+                                <DropdownMenuItem className="hover:bg-emerald-600 hover:text-emerald-600-foreground" asChild>
+                                    <Link href={route('profile.edit')}>
+                                        <UserRoundPen />
+                                        <span>Profile Settings</span>
+                                    </Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem className="hover:bg-emerald-600 hover:text-emerald-600-foreground" asChild>
+                                    <Link href={route('profile.account.edit')}>
+                                        <UserCog />
+                                        <span>Account Settings</span>
+                                    </Link>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem className="hover:bg-emerald-600 hover:text-emerald-600-foreground" asChild>
                                     <Link href={route('logout')} method="post" className="w-full">

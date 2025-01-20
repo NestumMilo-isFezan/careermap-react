@@ -51,7 +51,6 @@ type ResumeFormData = {
     }>,
     soft_skills: Array<{
         soft_skill: string;
-        level: string;
     }>,
     languages: Array<{
         language: string;
@@ -132,7 +131,6 @@ export default function CreateEdit({ resumePrefillData, resumeEditData, edit = f
         }],
         soft_skills: initialData?.soft_skills || [{
             soft_skill: '',
-            level: '',
         }],
         languages: initialData?.languages || [{
             language: '',
@@ -272,7 +270,7 @@ export default function CreateEdit({ resumePrefillData, resumeEditData, edit = f
                                     data-[state=active]:text-white
                                     transition-all duration-200"
                             >
-                                Edit Resume
+                                {route().current('student.resume.edit') ? 'Edit Resume' : 'Create Resume'}
                             </TabsTrigger>
                             <TabsTrigger
                                 value="view"
@@ -370,7 +368,7 @@ export default function CreateEdit({ resumePrefillData, resumeEditData, edit = f
                                     </div>
                                     <div className="flex flex-col">
                                         {formData.education.map((edu, index) => (
-                                            <div key={index} className={`flex flex-col items-start p-4 ${formData.education.length > 1 ? 'border-b border-emerald-200' : ''}`}>
+                                            <div key={index} className={`flex flex-col items-start p-4 ${formData.education.length > 1 && index !== 0 ? 'border-t border-emerald-200' : ''}`}>
                                                 <div className="w-full flex flex-row justify-between">
                                                     <h3 className="text-md font-semibold">Education {index + 1}</h3>
                                                     {formData.education.length > 1 && (
@@ -398,6 +396,7 @@ export default function CreateEdit({ resumePrefillData, resumeEditData, edit = f
                                                         }}
                                                         errorMessage={getErrorMessage(errors as FormErrors, 'education.school', index)}
                                                         disabled={processing}
+                                                        placeholder="School"
                                                     />
                                                     <FormField
                                                         label="Education Level"
@@ -409,6 +408,7 @@ export default function CreateEdit({ resumePrefillData, resumeEditData, edit = f
                                                         }}
                                                         errorMessage={getErrorMessage(errors as FormErrors, 'education.education_level', index)}
                                                         disabled={processing}
+                                                        placeholder="Education Level"
                                                     />
                                                     <DatePicker
                                                         label="Start Date"
@@ -453,7 +453,7 @@ export default function CreateEdit({ resumePrefillData, resumeEditData, edit = f
                                     </div>
                                     <div className="flex flex-col">
                                         {formData.experiences.map((exp, index) => (
-                                            <div key={index} className={`flex flex-col items-start p-4 ${formData.experiences.length > 1 ? 'border-b border-emerald-200' : ''}`}>
+                                            <div key={index} className={`flex flex-col items-start p-4 ${formData.experiences.length > 1 && index !== 0 ? 'border-t border-emerald-200' : ''}`}>
                                                 <div className="w-full flex flex-row justify-between">
                                                     <h3 className="text-md font-semibold">Experience {index + 1}</h3>
                                                     {formData.experiences.length > 1 && (
@@ -481,6 +481,7 @@ export default function CreateEdit({ resumePrefillData, resumeEditData, edit = f
                                                         }}
                                                         errorMessage={getErrorMessage(errors as FormErrors, 'experiences.activity', index)}
                                                         disabled={processing}
+                                                        placeholder="Activity/Organization"
                                                     />
                                                     <FormField
                                                         label="Position"
@@ -492,6 +493,7 @@ export default function CreateEdit({ resumePrefillData, resumeEditData, edit = f
                                                         }}
                                                         errorMessage={getErrorMessage(errors as FormErrors, 'experiences.position', index)}
                                                         disabled={processing}
+                                                        placeholder="Position"
                                                     />
                                                     <DatePicker
                                                         label="Start Date"
@@ -536,7 +538,7 @@ export default function CreateEdit({ resumePrefillData, resumeEditData, edit = f
                                     </div>
                                     <div className="flex flex-col">
                                         {formData.certifications.map((cert, index) => (
-                                            <div key={index} className={`flex flex-col items-start p-4 ${formData.certifications.length > 1 ? 'border-b border-emerald-200' : ''}`}>
+                                            <div key={index} className={`flex flex-col items-start p-4 ${formData.certifications.length > 1 && index !== 0 ? 'border-t border-emerald-200' : ''}`}>
                                                 <div className="w-full flex flex-row justify-between">
                                                     <h3 className="text-md font-semibold">Certification {index + 1}</h3>
                                                     {formData.certifications.length > 1 && (
@@ -564,6 +566,7 @@ export default function CreateEdit({ resumePrefillData, resumeEditData, edit = f
                                                         }}
                                                         errorMessage={getErrorMessage(errors as FormErrors, 'certifications.certification', index)}
                                                         disabled={processing}
+                                                        placeholder="Certification Name"
                                                     />
                                                     <DatePicker
                                                         label="Date of Issue"
@@ -597,7 +600,7 @@ export default function CreateEdit({ resumePrefillData, resumeEditData, edit = f
                                     </div>
                                     <div className="flex flex-col">
                                         {formData.skills.map((skill, index) => (
-                                            <div key={index} className={`flex flex-col items-start p-4 ${formData.skills.length > 1 ? 'border-b border-emerald-200' : ''}`}>
+                                            <div key={index} className={`flex flex-col items-start p-4 ${formData.skills.length > 1 && index !== 0 ? 'border-t border-emerald-200' : ''}`}>
                                                 <div className="w-full flex flex-row justify-between">
                                                     <h3 className="text-md font-semibold">Skill {index + 1}</h3>
                                                     {formData.skills.length > 1 && (
@@ -625,6 +628,7 @@ export default function CreateEdit({ resumePrefillData, resumeEditData, edit = f
                                                         }}
                                                         errorMessage={getErrorMessage(errors as FormErrors, 'skills.skill', index)}
                                                         disabled={processing}
+                                                        placeholder="Skill"
                                                     />
                                                     <SelectOption
                                                         label="Proficiency Level"
@@ -660,7 +664,7 @@ export default function CreateEdit({ resumePrefillData, resumeEditData, edit = f
                                     </div>
                                     <div className="flex flex-col">
                                         {formData.soft_skills.map((softSkill, index) => (
-                                            <div key={index} className={`flex flex-col items-start p-4 ${formData.soft_skills.length > 1 ? 'border-b border-emerald-200' : ''}`}>
+                                            <div key={index} className={`flex flex-col items-start p-4 ${formData.soft_skills.length > 1 && index !== 0 ? 'border-t border-emerald-200' : ''}`}>
                                                 <div className="w-full flex flex-row justify-between">
                                                     <h3 className="text-md font-semibold">Soft Skill {index + 1}</h3>
                                                     {formData.soft_skills.length > 1 && (
@@ -688,19 +692,7 @@ export default function CreateEdit({ resumePrefillData, resumeEditData, edit = f
                                                         }}
                                                         errorMessage={getErrorMessage(errors as FormErrors, 'soft_skills.soft_skill', index)}
                                                         disabled={processing}
-                                                    />
-                                                    <SelectOption
-                                                        label="Proficiency Level"
-                                                        placeholder="Select level"
-                                                        value={softSkill.level ? softSkill.level.toLowerCase() : ''}
-                                                        onValueChange={(value) => {
-                                                            const newSoftSkills = [...formData.soft_skills];
-                                                            newSoftSkills[index].level = value;
-                                                            setData('soft_skills', newSoftSkills);
-                                                        }}
-                                                        options={proficiencyLevels}
-                                                        errorMessage={getErrorMessage(errors as FormErrors, 'soft_skills.level', index)}
-                                                        disabled={processing}
+                                                        placeholder="Soft Skill"
                                                     />
                                                 </div>
                                             </div>
@@ -723,7 +715,7 @@ export default function CreateEdit({ resumePrefillData, resumeEditData, edit = f
                                     </div>
                                     <div className="flex flex-col">
                                         {formData.languages.map((lang, index) => (
-                                            <div key={index} className={`flex flex-col items-start p-4 ${formData.languages.length > 1 ? 'border-b border-emerald-200' : ''}`}>
+                                            <div key={index} className={`flex flex-col items-start p-4 ${formData.languages.length > 1 && index !== 0 ? 'border-t border-emerald-200' : ''}`}>
                                                 <div className="w-full flex flex-row justify-between">
                                                     <h3 className="text-md font-semibold">Language {index + 1}</h3>
                                                     {formData.languages.length > 1 && (

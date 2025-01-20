@@ -24,5 +24,6 @@ class DatabaseSeeder extends Seeder
         $this->call([QuestionSeeder::class]);
         $this->call([ClassroomSeeder::class]);
         $this->call([RoadmapSeeder::class]);
+        $this->call([SoftSkillSeeder::class]);
     }
 }

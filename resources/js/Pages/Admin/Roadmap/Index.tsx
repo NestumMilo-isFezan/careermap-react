@@ -4,7 +4,7 @@ import { Head, router, Link } from '@inertiajs/react';
 import { PaginatedData, Roadmap, Domain } from '@/types';
 
 // Icons
-import { Plus, Search, PackageOpen, X } from 'lucide-react';
+import { Plus, Search, PackageOpen, X, MapPin } from 'lucide-react';
 
 // Components
 import Pagination from '@/Components/Pagination';
@@ -149,12 +149,29 @@ export default function Index(
         <AdminLayout title="Roadmap">
             <Head title="Roadmap" />
             <div className="flex flex-col w-full pb-10">
-                {/* <div className="flex items-center justify-between px-6 py-2">
-                    <button onClick={startPolling} className={`text-white font-bold py-2 px-4 rounded ${polling ? 'bg-red-500' : 'bg-emerald-500'}`}>{polling ? 'Stop Polling' : 'Start Polling'}</button>
-                </div> */}
                 <div className="flex flex-col w-full p-6 pb-10 bg-emerald-50 border border-primary rounded-lg">
-                    <div className="flex flex-row items-center justify-between gap-3 px-6 py-2 pb-5">
-                        <div className="flex flex-row items-center gap-3 lg:w-full lg:max-w-lg">
+                    <div className="w-full flex flex-col items-center justify-between gap-3 px-6 py-2 pb-5">
+                        <div className="w-full flex flex-col md:flex-row items-start md:items-center justify-between px-1 py-2 gap-4">
+                            <div className="flex flex-row items-center gap-x-4">
+                                <span className="inline-block p-2 md:p-3 bg-emerald-100 rounded-md border border-emerald-200">
+                                    <MapPin className="size-5 md:size-6 text-emerald-600" />
+                                </span>
+                                <div className="flex flex-col">
+                                    <h1 className="text-xl md:text-2xl font-bold text-emerald-800">Career Roadmap Management</h1>
+                                    <p className="text-emerald-700 text-xs md:text-sm text-justify max-w-lg">
+                                        Manage Career Roadmaps here.
+                                    </p>
+                                </div>
+                            </div>
+                            <div>
+                                <Link href={route('admin.roadmap.create')} className={buttonVariants({ variant: "default" })} >
+                                    <Plus />
+                                    <span className="ml-2">New Roadmap</span>
+                                </Link>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-row gap-3 w-full px-1 py-2 pb-5">
                             <div className="relative w-full max-w-sm">
                                 <Input
                                     type="text"
@@ -190,16 +207,10 @@ export default function Index(
                                 )}
                             </div>
                         </div>
-                        <div>
-                            <Link href={route('admin.roadmap.create')} className={buttonVariants({ variant: "default" })} >
-                                <Plus />
-                                <span className="ml-2">New Roadmap</span>
-                            </Link>
-                        </div>
                     </div>
                         {roadmaps && roadmaps.data.length > 0 ? (
                             <>
-                            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 px-6 py-2">
+                            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 px-6 py-2">
                                 {roadmaps.data.map((roadmap : Roadmap) => (
                                     <RoadmapItem roadmap={roadmap} onDelete={handleDeleteClick} key={roadmap.id} />
                                 ))}

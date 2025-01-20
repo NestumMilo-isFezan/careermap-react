@@ -3,7 +3,12 @@
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RatingController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\Student\TraitsController;
+use App\Http\Controllers\Teacher\FeedbackController;
+use App\Http\Controllers\Admin\Course\CourseController;
+use App\Http\Controllers\ProfileController;
 
 Route::get('/', function () {
     if(Auth::check()){
@@ -49,33 +54,55 @@ Route::middleware(['auth', 'user_access:0'])->prefix('student')->name('student.'
     Route::delete('/curricular/{id}', [App\Http\Controllers\Student\CurricularExchangeController::class, 'destroy'])->name('curricular.destroy');
 
     Route::get('/feedback', [App\Http\Controllers\Student\FeedbackController::class, 'index'])->name('feedback.index');
+    Route::post('/feedback/{feedback}/respond', [App\Http\Controllers\Student\FeedbackController::class, 'respond'])->name('feedback.respond');
+    Route::put('/feedback/{feedback}/update-response', [App\Http\Controllers\Student\FeedbackController::class, 'updateResponse'])->name('feedback.update-response');
 
 });
 
 // Admin Routes
 Route::middleware(['auth', 'user_access:1'])->prefix('admin')->name('admin.')->group(function(){
     Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
-    // // Route::resource('course', App\Http\Controllers\Admin\Course\CourseController::class);
-    // Volt::route('course', 'pages.admin.course')->name('course');
 
     Route::resource('roadmap', App\Http\Controllers\Admin\Roadmap\RoadmapController::class);
 
-    // Route::prefix('roadmap')->name('roadmap.')->group(function(){
-    //     Volt::route('index', 'pages.admin.roadmap.index')->name('index');
-    // });
+    Route::prefix('course')->name('course.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\Course\CourseController::class, 'index'])->name('index');
+        Route::post('/import', [CourseController::class, 'import'])->name('import');
+        Route::post('/preview', [CourseController::class, 'preview'])->name('preview');
+        Route::put('/{course}', [CourseController::class, 'update'])->name('update');
+        Route::delete('/{course}', [CourseController::class, 'destroy'])->name('destroy');
+    });
 
-    // Route::prefix('user')->name('users.')->group(function(){
-    //     Volt::route('index', 'pages.admin.user.index')->name('index');
-    // });
+    Route::get('/user', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('user.index');
+    Route::delete('/user/{user}', [App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('user.destroy');
+    Route::put('/user/{user}', [App\Http\Controllers\Admin\UserController::class, 'update'])->name('user.update');
+    Route::get('/user/{user}', [App\Http\Controllers\Admin\UserController::class, 'show'])->name('user.show');
 
-    // Route::prefix('domain')->name('domain.')->group(function(){
-    //     Volt::route('index', 'pages.admin.domain.index')->name('index');
-    // });
+    Route::resource('news', App\Http\Controllers\Admin\NewsController::class);
+
+    Route::get('/school', [App\Http\Controllers\Admin\SchoolController::class, 'index'])->name('school.index');
+    Route::prefix('classroom')->name('classroom.')->group(function(){
+        Route::post('/', [App\Http\Controllers\Admin\ClassesController::class, 'store'])->name('store');
+        Route::put('/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'update'])->name('update');
+        Route::delete('/{id}', [App\Http\Controllers\Admin\ClassesController::class, 'destroy'])->name('destroy');
+    });
 });
 
 // Teacher Routes
 Route::middleware(['auth', 'user_access:2'])->prefix('teacher')->name('teacher.')->group(function(){
     Route::get('/dashboard', [App\Http\Controllers\Teacher\DashboardController::class, 'index'])->name('dashboard');
+
+    Route::resource('feedback', App\Http\Controllers\Teacher\FeedbackController::class);
+
+    Route::get('/curricular', [App\Http\Controllers\Teacher\CurricularExchangeController::class, 'index'])->name('curricular.index');
+    Route::post('/curricular', [App\Http\Controllers\Teacher\CurricularExchangeController::class, 'store'])->name('curricular.store');
+    Route::put('/curricular/reject', [App\Http\Controllers\Teacher\CurricularExchangeController::class, 'reject'])->name('curricular.reject');
+    Route::put('/curricular/retract', [App\Http\Controllers\Teacher\CurricularExchangeController::class, 'retract'])->name('curricular.retract');
 });
+
+Route::post('/ratings', [RatingController::class, 'store'])->name('ratings.store');
+Route::post('/report', [ReportController::class, 'store'])->name('report.store');
+
+// Add this route if it doesn't exist
 
 require __DIR__.'/auth.php';

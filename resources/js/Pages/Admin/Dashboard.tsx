@@ -3,6 +3,16 @@ import AdminLayout from '@/Layouts/AdminLayout';
 import { Head } from '@inertiajs/react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
+import {
+    LayoutDashboard,
+    Users,
+    LogIn,
+    UserPlus,
+    Beaker,
+    GraduationCap,
+    MapPin,
+    MapPinCheck
+} from 'lucide-react';
 
 // Register ChartJS components
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -12,6 +22,7 @@ interface StatsCardProps {
     metrics: {
         label: string;
         value: number | string;
+        icon: React.ReactNode;
         color?: string;
     }[];
     chartData?: {
@@ -49,8 +60,15 @@ const StatsCard = ({ title, metrics, chartData }: StatsCardProps) => {
                                             boxWidth: 12,
                                             padding: 8,
                                         }
+                                    },
+                                    tooltip: {
+                                        enabled: true
+                                    },
+                                    datalabels: {
+                                        display: false
                                     }
-                                }
+                                },
+                                cutout: '40%'
                             }}
                         />
                     ) : (
@@ -77,12 +95,15 @@ const StatsCard = ({ title, metrics, chartData }: StatsCardProps) => {
                 <div className="grid grid-cols-2 gap-4 mt-auto">
                     {metrics.map((metric, index) => (
                         <div key={index} className="flex flex-col">
-                            <span className={`text-sm ${metric.color || 'text-emerald-500'}`}>
+                            <span className={`text-md ${metric.color || 'text-emerald-500 font-semibold'}`}>
                                 {metric.label}
                             </span>
-                            <p className="text-2xl font-bold text-gray-800">
-                                {metric.value || '0'}
-                            </p>
+                            <div className="flex flex-row items-center gap-x-2">
+                                {metric.icon}
+                                <p className="text-2xl font-bold text-emerald-800">
+                                    {metric.value || '0'}
+                                </p>
+                            </div>
                         </div>
                     ))}
                 </div>
@@ -127,8 +148,16 @@ export default function Dashboard({
             <StatsCard
                 title="User Activity"
                 metrics={[
-                    { label: "Login", value: loginCount },
-                    { label: "Register", value: registerCount }
+                    {
+                        label: "Login",
+                        value: loginCount,
+                        icon: <LogIn className="size-5 md:size-6 text-emerald-600" />
+                    },
+                    {
+                        label: "Register",
+                        value: registerCount,
+                        icon: <UserPlus className="size-5 md:size-6 text-emerald-600" />
+                    }
                 ]}
                 chartData={{
                     labels: ['Login', 'Register'],
@@ -143,8 +172,16 @@ export default function Dashboard({
             <StatsCard
                 title="Student Stream Distribution"
                 metrics={[
-                    { label: "Science", value: scienceStream },
-                    { label: "Non-Science", value: nonScienceStream }
+                    {
+                        label: "Science",
+                        value: scienceStream,
+                        icon: <Beaker className="size-5 md:size-6 text-emerald-600" />
+                    },
+                    {
+                        label: "Non-Science",
+                        value: nonScienceStream,
+                        icon: <GraduationCap className="size-5 md:size-6 text-emerald-600" />
+                    }
                 ]}
                 chartData={{
                     labels: ['Science', 'Non-Science'],
@@ -159,8 +196,16 @@ export default function Dashboard({
             <StatsCard
                 title="Roadmaps"
                 metrics={[
-                    { label: "Total", value: totalRoadmaps },
-                    { label: "Favourite", value: 5 }
+                    {
+                        label: "Total",
+                        value: totalRoadmaps,
+                        icon: <MapPin className="size-5 md:size-6 text-emerald-600" />
+                    },
+                    {
+                        label: "Favourite",
+                        value: 5,
+                        icon: <MapPinCheck className="size-5 md:size-6 text-emerald-600" />
+                    }
                 ]}
                 chartData={{
                     labels: ['Total', 'Favourite'],
@@ -179,6 +224,19 @@ export default function Dashboard({
             <Head title="Dashboard" />
 
             <div className="p-6">
+                <div className="w-full flex flex-col md:flex-row items-start md:items-center justify-between px-1 py-2 pb-8 gap-4">
+                    <div className="flex flex-row items-center gap-x-4">
+                        <span className="inline-block p-2 md:p-3 bg-emerald-100 rounded-md border border-emerald-200">
+                            <LayoutDashboard className="size-5 md:size-6 text-emerald-600" />
+                        </span>
+                        <div className="flex flex-col">
+                            <h1 className="text-xl md:text-2xl font-bold text-emerald-800">Dashboard Overview</h1>
+                            <p className="text-emerald-700 text-xs md:text-sm text-justify max-w-lg">
+                                View system overview and statistics here.
+                            </p>
+                        </div>
+                    </div>
+                </div>
                 {/* Top Row */}
                 <div className="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-2">
                     {/* Welcome Card */}

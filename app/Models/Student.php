@@ -42,4 +42,9 @@ class Student extends Model
     {
         return $this->hasMany(Curriculum::class);
     }
+
+    public function feedback()
+    {
+        return $this->hasOne(Feedback::class);
+    }
 }

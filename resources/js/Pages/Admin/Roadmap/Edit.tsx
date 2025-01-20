@@ -15,8 +15,12 @@ import { Spinner } from '@/shadcn/components/ui/spinner';
 
 // Define requirement options
 const requirementOptions = [
+    { label: 'Grade A+', value: 'A+' },
     { label: 'Grade A', value: 'A' },
+    { label: 'Grade A-', value: 'A-' },
+    { label: 'Grade B+', value: 'B+' },
     { label: 'Grade B', value: 'B' },
+    { label: 'Grade C+', value: 'C+' },
     { label: 'Grade C', value: 'C' },
     { label: 'Grade D', value: 'D' },
     { label: 'Grade E', value: 'E' },
@@ -24,6 +28,7 @@ const requirementOptions = [
 ];
 
 interface RoadmapForm {
+    _method?: string;
     id: number;
     title: string;
     description: string;
@@ -31,7 +36,7 @@ interface RoadmapForm {
     domain_id: number;
     prerequisite_items: PrerequisiteItem[];
     adaptation_items: AdaptationItem[];
-    preview_image?: string | null;
+    preview_image?: string;
 }
 
 // First, modify your type definitions
@@ -50,23 +55,25 @@ interface AdaptationItem {
 }
 
 // Retrieve Form Props from Admin/Roadmap/Create Controller
-interface FormProps{
+interface FormProps {
     domains: Domain[];
     personas: Persona[];
-    subjects: Subject[]
+    subjects: Subject[];
+    roadmap: RoadmapForm;
 }
 
-export default function Edit({ domains, personas, subjects }: FormProps) {
-
-    // Initialize form with useForm hook
+export default function Edit({ domains, personas, subjects, roadmap }: FormProps) {
+    // Initialize form with existing roadmap data
     const { data, setData, post, processing, errors } = useForm<RoadmapForm>({
-        id: 0,
-        title: '',
-        description: '',
+        _method: 'put',
+        id: roadmap.id,
+        title: roadmap.title,
+        description: roadmap.description,
         image: null,
-        domain_id: 0,
-        prerequisite_items: [{ subject_id: 0, requirement: '' }], // Start with one empty prerequisite
-        adaptation_items: [{ persona_id: 0, name: '' }], // Start with one empty adaptation
+        domain_id: roadmap.domain_id,
+        prerequisite_items: roadmap.prerequisite_items,
+        adaptation_items: roadmap.adaptation_items,
+        preview_image: roadmap.preview_image
     });
 
     // Add this helper function at the top of your component
@@ -75,14 +82,14 @@ export default function Edit({ domains, personas, subjects }: FormProps) {
         if (typeof index === 'number') {
             const arrayErrors = errors[field] as Record<string, string>;
             return arrayErrors?.[index] || arrayErrors?.[`${index}`];
-    }
+        }
 
-    // Handle regular field errors
-    const error = errors[field];
-    if (Array.isArray(error)) return error[0];
-    if (typeof error === 'string') return error;
-    return undefined;
-};
+        // Handle regular field errors
+        const error = errors[field];
+        if (Array.isArray(error)) return error[0];
+        if (typeof error === 'string') return error;
+        return undefined;
+    };
 
     // Handle prerequisite field changes
     const handlePrerequisiteChange = (
@@ -137,12 +144,12 @@ export default function Edit({ domains, personas, subjects }: FormProps) {
         setData('adaptation_items', updatedAdaptations);
     };
 
-    // Handle form submission
+    // Update form submission
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route('admin.roadmap.store'), {
+        post(route('admin.roadmap.update', roadmap.id), {
             onSuccess: () => {
-                console.log('Roadmap created successfully');
+                console.log('Roadmap updated successfully');
             },
             onError: (errors) => {
                 console.log('Validation errors:', errors);
@@ -172,15 +179,15 @@ export default function Edit({ domains, personas, subjects }: FormProps) {
     };
 
     return (
-        <AdminLayout title="Create Roadmap">
-            <Head title="Create Roadmap" />
+        <AdminLayout title="Edit Roadmap">
+            <Head title="Edit Roadmap" />
             <div className="flex flex-col w-full pb-10 md:pb-5">
                 <div className="flex flex-col w-full p-6 pb-10 bg-emerald-50 border border-primary rounded-lg">
                     <form className="flex flex-col w-full" onSubmit={handleSubmit}>
                         <div className="flex flex-col w-full gap-4">
                             <UploadImageField
                                 label="Roadmap Image"
-                                imagePath="https://penguinui.s3.amazonaws.com/component-assets/3d-avatar-1.webp"
+                                imagePath={data.preview_image ?? 'https://penguinui.s3.amazonaws.com/component-assets/3d-avatar-1.webp'}
                                 onImageChange={handleImageChange}
                                 errorMessage={errors.image}
                             />
@@ -204,7 +211,7 @@ export default function Edit({ domains, personas, subjects }: FormProps) {
                                     placeholder="Enter Roadmap description"
                                     value={data.description}
                                     onChange={e => setData('description', e)}
-                                    className="md:max-w-screen-sm"
+                                    className="md:max-w-screen-sm h-28"
                                     errorMessage={errors.description}
                                     disabled={processing}
                                 />
@@ -393,7 +400,7 @@ export default function Edit({ domains, personas, subjects }: FormProps) {
                                     </span>
                                 ) : (
                                     <span className="flex items-center gap-2">
-                                        <Save className="mr-2 size-4" /> Create Roadmap
+                                        <Save className="mr-2 size-4" /> Update Roadmap
                                     </span>
                                 )}
                             </Button>

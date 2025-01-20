@@ -19,6 +19,12 @@ Route::middleware('guest')->group(function () {
 
     Route::post('register', [RegisteredUserController::class, 'store']);
 
+    Route::get('register/teacher', [RegisteredUserController::class, 'createTeacher'])
+        ->name('register.teacher');
+
+    Route::post('register/teacher', [RegisteredUserController::class, 'storeTeacher'])
+        ->name('register.teacher');
+
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
         ->name('login');
 
@@ -65,6 +71,20 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/account-settings', [ProfileController::class, 'editAccount'])->name('profile.account.edit');
+
+    Route::get('/teacher-profile', [ProfileController::class, 'editTeacherDetails'])->name('profile.teacher.edit');
+
+    Route::post('/profile/teacher/details', [ProfileController::class, 'updateTeacherDetails'])->name('profile.teacher.details.update');
+
+    Route::get('/student-profile', [ProfileController::class, 'editStudentDetails'])->name('profile.student.edit');
+
+    Route::post('/profile/student/details', [ProfileController::class, 'updateStudentDetails'])
+        ->name('profile.student.details.update');
+
+    Route::post('/profile/student/grades', [ProfileController::class, 'updateStudentGrades'])
+        ->name('profile.student.grades.update');
 });
 
 Route::middleware(['auth', 'user_access:3'])->prefix('guest')->name('guest.')->group(function () {
@@ -82,7 +102,13 @@ Route::middleware(['auth', 'user_access:3'])->prefix('guest')->name('guest.')->g
         ->name('register.students.grade.store');
 });
 
-// Route::middleware(['auth', 'user_access:4'])->prefix('guest')->name('guest.')->group(function () {
-//     Route::get('register/teachers', TeacherRegisteration::class)
-//         ->name('register.teachers');
-// });
+Route::middleware(['auth', 'user_access:4'])->prefix('guest')->name('guest.')->group(function () {
+    Route::get('register/teachers', [App\Http\Controllers\Auth\TeacherRegistrationController::class, 'index'])
+        ->name('register.teachers');
+
+    Route::post('register/teachers/profile', [App\Http\Controllers\Auth\TeacherRegistrationController::class, 'storeProfile'])
+        ->name('register.teachers.profile.store');
+
+    Route::post('register/teachers/details', [App\Http\Controllers\Auth\TeacherRegistrationController::class, 'storeDetails'])
+        ->name('register.teachers.details.store');
+});

@@ -22,4 +22,9 @@ class Teacher extends Model
     {
         return $this->hasOne(Classroom::class);
     }
+
+    public function feedback()
+    {
+        return $this->hasMany(Feedback::class);
+    }
 }

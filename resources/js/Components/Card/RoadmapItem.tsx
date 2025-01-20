@@ -1,5 +1,5 @@
 import { Roadmap } from "@/types";
-import { router, usePage } from "@inertiajs/react";
+import { router, usePage, Link } from "@inertiajs/react";
 import { MapPin } from 'lucide-react'
 import { Button, buttonVariants } from "@/shadcn/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/shadcn/components/ui/card";
@@ -58,9 +58,9 @@ export default function RoadmapItem({roadmap, onDelete}: Props) {
           <CardFooter className="p-6 pt-0 gap-4">
             {user?.role === 1 && (
                 <div className="grid grid-cols-2 w-full gap-4">
-                    <Button>
+                    <Link href={route('admin.roadmap.edit', roadmap.id)} className={buttonVariants({variant: "outline", className: "bg-sky-300 hover:bg-sky-600 text-sky-700 hover:text-white border-sky-500 hover:border-sky-600"})}>
                         Edit
-                    </Button>
+                    </Link>
                     <Button variant="destructive" onClick={() => onDelete?.(roadmap.id, roadmap.title)}>
                         Delete
                     </Button>

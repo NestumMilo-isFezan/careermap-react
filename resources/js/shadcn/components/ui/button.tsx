@@ -22,6 +22,7 @@ const buttonVariants = cva(
         login: "border border-emerald-800 text-emerald-800 hover:bg-emerald-800 hover:text-white",
         register: "bg-emerald-900 text-emerald-100 hover:bg-emerald-600 hover:text-white",
         navlink: "text-primary-foreground hover:underline hover:bg-emerald-800/50 transition-all duration-200 underline-offset-4",
+        navlinkIcon: "text-primary-foreground hover:bg-emerald-800/50 transition-all duration-200 rounded-full",
         navlinkActive: "bg-emerald-600/50 text-emerald-100 hover:bg-emerald-600 hover:text-white hover:underline transition-all duration-200 underline-offset-4",
         title: "text-xl font-bold text-emerald-900 hover:underline hover:text-emerald-800",
       },

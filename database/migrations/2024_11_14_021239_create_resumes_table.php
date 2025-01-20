@@ -71,7 +71,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('resume_id')->constrained()->cascadeOnDelete();
             $table->string('soft_skill');
-            $table->string('level');
+            $table->string('level')->nullable();
             $table->timestamps();
         });
 

@@ -5,7 +5,7 @@ import Checkbox from '@/Components/Checkbox';
 // import TextInput from '@/Components/TextInput';
 
 import { FormField } from '@/Components/shadcn/Form/Components';
-import { Button } from '@/shadcn/components/ui/button';
+import { Button, buttonVariants } from '@/shadcn/components/ui/button';
 import AuthLayout from '@/Layouts/AuthLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
@@ -104,7 +104,7 @@ export default function Login({
                     )}
 
                     {/* Submit Button */}
-                    <Button type="submit" disabled={processing} className="w-full" size="lg">
+                    <button type="submit" disabled={processing} className={buttonVariants({ variant: 'default', size: 'lg', className: 'w-full' })} data-pan="login-event">
                         {processing ? (
                             <span className="flex items-center gap-2">
                                 <Spinner className="mr-2 text-emerald-900" /> Logging in...
@@ -114,7 +114,7 @@ export default function Login({
                                 <LogIn className="mr-2 size-6" /> Log in
                             </span>
                         )}
-                    </Button>
+                    </button>
                 </div>
             </form>
 

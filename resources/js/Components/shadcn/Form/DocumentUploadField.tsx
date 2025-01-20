@@ -5,20 +5,20 @@ import { Button } from '@/shadcn/components/ui/button';
 import { FileUp, X, FileCheck } from 'lucide-react';
 
 interface DocumentUploadFieldProps {
-    label?: string;
-    onFileChange: (file: File | null) => void;
-    errorMessage?: string;
-    currentFileName?: string;
     accept?: string;
+    onFileChange: (file: File | null) => void;
+    label?: string;
+    hint?: string;
+    errorMessage?: string;
 }
 
-export const DocumentUploadField = ({
-    label = "Document",
+export function DocumentUploadField({
+    accept = ".pdf,.doc,.docx",
     onFileChange,
+    label,
+    hint,
     errorMessage,
-    currentFileName,
-    accept = ".pdf,.doc,.docx"
-}: DocumentUploadFieldProps) => {
+}: DocumentUploadFieldProps) {
     const [file, setFile] = useState<File | null>(null);
 
     const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -72,7 +72,7 @@ export const DocumentUploadField = ({
 
     return (
         <div className="flex flex-col gap-2">
-            <Label className="text-emerald-800">{label}</Label>
+            {label && <Label className="text-emerald-800">{label}</Label>}
             <div
                 {...getRootProps()}
                 className={`border-2 border-dashed rounded-lg p-6 cursor-pointer
@@ -97,14 +97,14 @@ export const DocumentUploadField = ({
                 </div>
             </div>
 
-            {(file || currentFileName) && (
+            {file && (
                 <div className="flex items-center justify-between p-3 bg-emerald-50 rounded-md border border-emerald-200">
                     <div className="flex items-center gap-2">
                         <FileCheck className="w-5 h-5 text-emerald-500" />
                         <span className="text-emerald-700 text-sm">
-                            {truncateFileName(file ? file.name : currentFileName!)}
+                            {truncateFileName(file.name)}
                         </span>
-                        {getFileTypeBadge(file ? file.name : currentFileName!)}
+                        {getFileTypeBadge(file.name)}
                     </div>
                     <Button
                         type="button"
@@ -123,4 +123,4 @@ export const DocumentUploadField = ({
             )}
         </div>
     );
-};
+}

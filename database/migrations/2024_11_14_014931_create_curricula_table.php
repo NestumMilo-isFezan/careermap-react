@@ -23,24 +23,18 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('softskills', function (Blueprint $table) {
+        Schema::create('soft_skills', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('description')->nullable();
             $table->timestamps();
         });
 
-        Schema::create('student_softskills', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('student_id')->constrained()->onDelete('cascade');
-            $table->timestamps();
-        });
-
         Schema::create('curriculum_points', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('student_softskill_id')->constrained('student_softskills')->onDelete('cascade');
+            $table->foreignId('student_id')->constrained()->onDelete('cascade');
             $table->foreignId('curriculum_id')->constrained('curriculums')->onDelete('cascade');
-            $table->foreignId('softskill_id')->constrained()->onDelete('cascade');
+            $table->foreignId('soft_skill_id')->constrained('soft_skills')->onDelete('cascade');
             $table->integer('score')->default(0);
             $table->timestamps();
         });

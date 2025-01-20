@@ -6,10 +6,13 @@ use App\Models\Exam;
 use Inertia\Inertia;
 use App\Models\Resume;
 use App\Models\Subject;
+use App\Models\SoftSkill;
+use App\Models\Curriculum;
 use App\Models\ExamSubject;
 use App\Models\ResumeSkill;
 use Illuminate\Http\Request;
 use App\Models\ResumeLanguage;
+use App\Models\CurriculumPoint;
 use App\Models\ResumeEducation;
 use App\Models\ResumeSoftSkill;
 use App\Models\ResumeExperience;
@@ -24,14 +27,7 @@ class ResumeController extends Controller
         if(Resume::where('user_id', Auth::id())->exists()){
             return redirect()->route('student.resume.edit');
         }
-        return Inertia::render('Student/Resume/Index', [
-            'messages' => [
-                'add_success' => session('success_message'),
-                'update_success' => session('success_message'),
-                'delete_success' => session('success_message'),
-                'error' => session('error'),
-            ],
-        ]);
+        return Inertia::render('Student/Resume/Index');
     }
 
     public function create(){
@@ -40,7 +36,7 @@ class ResumeController extends Controller
         }
 
 
-        if(Auth::user()->academic->exists()){
+        if(Auth::user()->academic){
             $examId = Auth::user()->academic->exam_id;
             $languages = ExamSubject::where('exam_id', $examId)
                 ->whereHas('subject', function($query) {
@@ -83,6 +79,37 @@ class ResumeController extends Controller
             ];
         }
 
+
+        if(Auth::user()->student->curriculums){
+            $studentId = Auth::user()->student->id;
+
+            $certificates = $this->getCurriculumData($studentId, 'certificates');
+            $experiences = $this->getCurriculumData($studentId, 'activities');
+            $softSkills = $this->getSoftSkill($studentId);
+        }
+        else{
+            $certificates = [
+                [
+                    'certification' => '',
+                    'date_of_issue' => '',
+                ],
+            ];
+            $experiences = [
+                [
+                    'activity' => '',
+                    'position' => '',
+                    'start_date' => '',
+                    'end_date' => '',
+                ],
+            ];
+            $softSkills = [
+                [
+                    'soft_skill' => '',
+                    'level' => '',
+                ],
+            ];
+        }
+
         $resumePrefillData = [
             'profile' => [
                 'name' => Auth::user()->name,
@@ -101,32 +128,15 @@ class ResumeController extends Controller
                     'end_date' => '2019-12-01',
                 ],
             ],
-            'experiences' => [
-                [
-                    'activity' => 'Pengawas Sekolah',
-                    'position' => 'Pengawas Sekolah',
-                    'start_date' => '2019-12-01',
-                    'end_date' => '2020-01-01',
-                ],
-            ],
-            'certifications' => [
-                [
-                    'certification' => 'Kangaroo Math Competition',
-                    'date_of_issue' => '2018-07-01',
-                ],
-            ],
+            'experiences' => $experiences,
+            'certifications' => $certificates,
             'skills' => [
                 [
                     'skill' => '',
                     'level' => '',
                 ],
             ],
-            'soft_skills' => [
-                [
-                    'soft_skill' => 'Communication',
-                    'level' => 'advanced',
-                ],
-            ],
+            'soft_skills' => $softSkills,
             'languages' => $languages,
         ];
         return Inertia::render('Student/Resume/CreateEdit', [
@@ -169,7 +179,6 @@ class ResumeController extends Controller
 
                     'soft_skills' => 'required|array|min:1',
                     'soft_skills.*.soft_skill' => 'required|string|max:100',
-                    'soft_skills.*.level' => ['required', 'string', 'in:beginner,basic,intermediate,advanced'],
 
                     'languages' => 'required|array|min:1',
                     'languages.*.language' => 'required|string|max:100',
@@ -196,8 +205,6 @@ class ResumeController extends Controller
                     'skills.*.level.in' => 'Invalid skill level selected',
 
                     'soft_skills.*.soft_skill.required' => 'Soft skill name is required',
-                    'soft_skills.*.level.required' => 'Soft skill level is required',
-                    'soft_skills.*.level.in' => 'Invalid soft skill level selected',
 
                     'languages.*.language.required' => 'Language name is required',
                     'languages.*.level.required' => 'Language level is required',
@@ -272,7 +279,6 @@ class ResumeController extends Controller
                 $softSkillRecords = collect($validated['soft_skills'])->map(function ($softSkill) use ($resume) {
                     return [
                         'soft_skill' => $softSkill['soft_skill'],
-                        'level' => $softSkill['level'],
                         'resume_id' => $resume->id,
                     ];
                 })->toArray();
@@ -344,7 +350,6 @@ class ResumeController extends Controller
             'soft_skills' => $resume->softSkill->map(function($softSkill) {
                 return [
                     'soft_skill' => $softSkill->soft_skill,
-                    'level' => $softSkill->level,
                 ];
             })->toArray(),
             'languages' => $resume->language->map(function($language) {
@@ -396,7 +401,6 @@ class ResumeController extends Controller
 
                     'soft_skills' => 'required|array|min:1',
                     'soft_skills.*.soft_skill' => 'required|string|max:100',
-                    'soft_skills.*.level' => ['required', 'string', 'in:beginner,basic,intermediate,advanced'],
 
                     'languages' => 'required|array|min:1',
                     'languages.*.language' => 'required|string|max:100',
@@ -479,7 +483,6 @@ class ResumeController extends Controller
                 $softSkillRecords = collect($validated['soft_skills'])->map(function ($softSkill) use ($resume) {
                     return [
                         'soft_skill' => $softSkill['soft_skill'],
-                        'level' => $softSkill['level'],
                         'resume_id' => $resume->id,
                     ];
                 })->toArray();
@@ -504,5 +507,66 @@ class ResumeController extends Controller
                 throw $e;
             }
         });
+    }
+
+    public function destroy(){
+        $resume = Resume::where('user_id', Auth::id())->firstOrFail();
+        $resume->delete();
+        return redirect()->route('student.resume.create')->with('success_message', 'Resume resync successfully');
+    }
+
+    private function getSoftSkill($studentId){
+        $points = CurriculumPoint::where('student_id', $studentId)->get();
+        $skillPoints = SoftSkill::all()->map(function ($softSkill) use ($points) {
+            $totalPoints = $points->where('soft_skill_id', $softSkill->id)
+                ->sum('score');
+
+            return [
+                'name' => $softSkill->name,
+                'description' => $softSkill->description,
+                'points' => $totalPoints
+            ];
+        })
+        ->sortByDesc('points')
+        ->values()
+        ->take(3);
+
+        $softSkills = [];
+        foreach($skillPoints as $skill){
+            $softSkills[] = [
+                'soft_skill' => $skill['name'],
+            ];
+        }
+
+        return $softSkills;
+    }
+
+    private function getCurriculumData($studentId, $type) {
+        $curriculum = Curriculum::where('student_id', $studentId)
+            ->where('status', 'approved')
+            ->where('type', $type)
+            ->get();
+
+        if ($curriculum->isEmpty()) {
+            return [
+                [
+                    $type === 'certificates' ? 'certification' : 'activity' => '',
+                    'date_of_issue' => $type === 'certificates' ? '' : '',
+                    'position' => $type === 'activities' ? '' : null,
+                    'start_date' => $type === 'activities' ? '' : null,
+                    'end_date' => $type === 'activities' ? '' : null,
+                ],
+            ];
+        }
+
+        return $curriculum->map(function($item) use ($type) {
+            return [
+                $type === 'certificates' ? 'certification' : 'activity' => $item->name,
+                'date_of_issue' => $type === 'certificates' ? $item->updated_at : null,
+                'position' => $type === 'activities' ? "" : null,
+                'start_date' => $type === 'activities' ? "" : null,
+                'end_date' => $type === 'activities' ? "" : null,
+            ];
+        })->toArray();
     }
 }

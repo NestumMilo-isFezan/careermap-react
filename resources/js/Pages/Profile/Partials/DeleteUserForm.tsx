@@ -3,8 +3,12 @@ import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import Modal from '@/Components/Modal';
 import SecondaryButton from '@/Components/SecondaryButton';
+import { FormField } from '@/Components/shadcn/Form/Components';
 import TextInput from '@/Components/TextInput';
+import { Button } from '@/shadcn/components/ui/button';
+import { Spinner } from '@/shadcn/components/ui/spinner';
 import { useForm } from '@inertiajs/react';
+import { Trash, UserRoundX } from 'lucide-react';
 import { FormEventHandler, useRef, useState } from 'react';
 
 export default function DeleteUserForm({
@@ -50,31 +54,39 @@ export default function DeleteUserForm({
     };
 
     return (
-        <section className={`space-y-6 ${className}`}>
+        <section className="w-full flex flex-col">
             <header>
-                <h2 className="text-lg font-medium text-gray-900">
-                    Delete Account
-                </h2>
-
-                <p className="mt-1 text-sm text-gray-600">
-                    Once your account is deleted, all of its resources and data
-                    will be permanently deleted. Before deleting your account,
-                    please download any data or information that you wish to
-                    retain.
-                </p>
+                <div className="w-full flex flex-col lg:flex-row items-center justify-between gap-3 px-6 py-2">
+                    <div className="w-full flex flex-col lg:flex-row items-start lg:items-center justify-between px-1 gap-4">
+                        <div className="flex flex-row items-center gap-x-4">
+                            <span className="inline-block p-2 md:p-3 bg-emerald-100 rounded-md border border-emerald-200">
+                                <UserRoundX className="size-5 md:size-6 text-emerald-600" />
+                            </span>
+                            <div className="flex flex-col">
+                                <h1 className="text-xl md:text-2xl font-bold text-emerald-800">Delete Account</h1>
+                                <p className="text-emerald-700 text-xs md:text-sm text-justify max-w-lg">
+                                    Once your account is deleted, all of its resources and data will be permanently deleted.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="w-full flex flex-row justify-center lg:justify-end items-center gap-2 lg:px-8">
+                        <DangerButton onClick={confirmUserDeletion}>
+                            Delete Account
+                        </DangerButton>
+                    </div>
+                </div>
             </header>
 
-            <DangerButton onClick={confirmUserDeletion}>
-                Delete Account
-            </DangerButton>
+
 
             <Modal show={confirmingUserDeletion} onClose={closeModal}>
                 <form onSubmit={deleteUser} className="p-6">
-                    <h2 className="text-lg font-medium text-gray-900">
+                    <h2 className="text-lg font-medium text-red-900">
                         Are you sure you want to delete your account?
                     </h2>
 
-                    <p className="mt-1 text-sm text-gray-600">
+                    <p className="mt-1 text-sm text-red-600">
                         Once your account is deleted, all of its resources and
                         data will be permanently deleted. Please enter your
                         password to confirm you would like to permanently delete
@@ -82,40 +94,34 @@ export default function DeleteUserForm({
                     </p>
 
                     <div className="mt-6">
-                        <InputLabel
-                            htmlFor="password"
-                            value="Password"
-                            className="sr-only"
-                        />
-
-                        <TextInput
-                            id="password"
-                            type="password"
-                            name="password"
-                            ref={passwordInput}
+                        <FormField
+                            label="Password"
                             value={data.password}
-                            onChange={(e) =>
-                                setData('password', e.target.value)
-                            }
-                            className="mt-1 block w-3/4"
-                            isFocused
+                            onChange={(e) => setData('password', e)}
+                            required
+                            autoComplete="new-password"
+                            errorMessage={errors.password}
+                            type="password"
                             placeholder="Password"
-                        />
-
-                        <InputError
-                            message={errors.password}
-                            className="mt-2"
                         />
                     </div>
 
-                    <div className="mt-6 flex justify-end">
-                        <SecondaryButton onClick={closeModal}>
+                    <div className="mt-6 flex justify-end gap-2">
+                        <Button onClick={closeModal} variant="outline" className="bg-rose-200 border border-rose-500 text-rose-900 hover:bg-rose-300 hover:border-rose-600 hover:text-rose-950">
                             Cancel
-                        </SecondaryButton>
+                        </Button>
 
-                        <DangerButton className="ms-3" disabled={processing}>
-                            Delete Account
-                        </DangerButton>
+                        <Button type="submit" disabled={processing} className="bg-red-500 border border-red-600 text-white hover:bg-red-600 hover:border-red-700 hover:text-white">
+                            {processing ? (
+                                <span className="flex items-center gap-2">
+                                    <Spinner className="mr-2 text-red-900" /> Deleting...
+                                </span>
+                            ) : (
+                                <span className="flex items-center gap-2">
+                                    <Trash className="mr-2 size-4" /> Delete
+                                </span>
+                            )}
+                        </Button>
                     </div>
                 </form>
             </Modal>

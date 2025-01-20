@@ -131,7 +131,7 @@ export const UploadImageField = ({
 
     return (
         <div className="flex flex-col w-full gap-2">
-            <Label>{label}</Label>
+            <Label className="text-emerald-800">{label}</Label>
             <div className="flex flex-col items-center w-full">
                 <label className={`w-full group cursor-pointer block relative ${circle ? 'aspect-square' : ''}`}>
                     <div className={`w-full border-4 border-white bg-white overflow-hidden
