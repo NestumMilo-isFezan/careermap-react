@@ -33,6 +33,7 @@ import {
     AlertDialogTrigger,
 } from "@/shadcn/components/ui/alert-dialog"
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { RatingModal } from '@/Components/shadcn/RatingModal';
 
 interface IndexProps {
     personaScoreExisted: boolean;
@@ -191,6 +192,13 @@ export default function Index({ personaScoreExisted, messages, personaScores, su
         </AlertDialog>
     );
 
+    // Add this function near the other utility functions
+    const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, sectionId: string) => {
+        e.preventDefault();
+        const element = document.getElementById(sectionId);
+        element?.scrollIntoView({ behavior: 'smooth' });
+    };
+
     return (
         <StudentLayout>
             <Head title="Traits" />
@@ -333,18 +341,15 @@ export default function Index({ personaScoreExisted, messages, personaScores, su
                                                                             color: 'rgb(15, 118, 110)',
                                                                             font: {
                                                                                 size: 12,
-                                                                                weight: 'medium',
+                                                                                weight: 'normal',
                                                                             }
                                                                         }
                                                                     },
                                                                     tooltip: {
                                                                         callbacks: {
                                                                             label: function(context) {
-                                                                                const dataset = context.dataset;
-                                                                                const total = dataset.data.reduce((acc: number, data: number) => acc + data, 0);
-                                                                                const currentValue = dataset.data[context.dataIndex] as number;
-                                                                                const percentage = ((currentValue / total) * 100).toFixed(1);
-                                                                                return `${context.label}: ${currentValue} (${percentage}%)`;
+                                                                                const value = context.dataset.data[context.dataIndex];
+                                                                                return `${context.label}: ${value}`;
                                                                             }
                                                                         }
                                                                     },
@@ -355,11 +360,8 @@ export default function Index({ personaScoreExisted, messages, personaScores, su
                                                                             weight: 'bold',
                                                                             size: 12,
                                                                         },
-                                                                        formatter: (value: number, ctx) => {
-                                                                            const dataset = ctx.dataset;
-                                                                            const total = dataset.data.reduce((acc: number, data: number) => acc + data, 0) ?? 0;
-                                                                            const percentage = ((value / total) * 100).toFixed(1);
-                                                                            return `${percentage}%`;
+                                                                        formatter: (value: number) => {
+                                                                            return `${value}`;
                                                                         },
                                                                     }
                                                                 },
@@ -396,7 +398,7 @@ export default function Index({ personaScoreExisted, messages, personaScores, su
                                                                             color: 'rgb(15, 118, 110)',
                                                                             font: {
                                                                                 size: 12,
-                                                                                weight: 'medium'
+                                                                                weight: 'normal'
                                                                             }
                                                                         },
                                                                         grid: {
@@ -408,7 +410,7 @@ export default function Index({ personaScoreExisted, messages, personaScores, su
                                                                         pointLabels: {
                                                                             font: {
                                                                                 size: 14,
-                                                                                weight: 'medium'
+                                                                                weight: 'normal'
                                                                             },
                                                                             color: 'rgb(15, 118, 110)',
                                                                         },
@@ -421,7 +423,7 @@ export default function Index({ personaScoreExisted, messages, personaScores, su
                                                                             color: 'rgb(15, 118, 110)',
                                                                             font: {
                                                                                 size: 14,
-                                                                                weight: 'medium'
+                                                                                weight: 'normal'
                                                                             },
                                                                             usePointStyle: true,
                                                                             padding: 20,
@@ -431,7 +433,7 @@ export default function Index({ personaScoreExisted, messages, personaScores, su
                                                                         backgroundColor: 'rgba(15, 118, 110, 0.8)',
                                                                         titleFont: {
                                                                             size: 14,
-                                                                            weight: 'medium'
+                                                                            weight: 'normal'
                                                                         },
                                                                         bodyFont: {
                                                                             size: 13
@@ -457,7 +459,6 @@ export default function Index({ personaScoreExisted, messages, personaScores, su
                                                         {suggestedRoadmaps.data.map((roadmap: Roadmap) => (
                                                             <DialogTrigger
                                                                 key={roadmap.id}
-                                                                onClick={() => viewRoadmap(roadmap)}
                                                                 asChild
                                                             >
                                                                 <div className="w-full h-full cursor-pointer transition-transform hover:scale-[1.02]">

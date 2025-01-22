@@ -3,8 +3,8 @@ import { School } from "lucide-react"
 import { Head, useForm } from "@inertiajs/react"
 import TeacherLayout from "@/Layouts/TeacherLayout"
 import UpdateTeacherClass from "../Partials/Teacher/UpdateTeacherClass"
-import { NotificationType } from "@/Components/Notification"
-
+import { NotificationType, Notification } from "@/Components/Notification"
+import { useState, useEffect } from "react"
 interface NotificationData {
     id: number
     variant: NotificationType
@@ -30,15 +30,76 @@ interface Props {
         id: number
         name: string
     }>
+    currentClassroom: number
 }
 
 export default function TeacherEdit({
     user,
     messages,
     classrooms,
+    currentClassroom,
 }: Props) {
+
+    // Notfication
+    const [notifications, setNotifications] = useState<NotificationData[]>([])
+    const displayDuration = 4000
+
+    const addNotification = (notification: Omit<NotificationData, 'id'>) => {
+        const id = Date.now()
+        const newNotification = { ...notification, id }
+
+        setNotifications(prevNotifications => {
+            const updatedNotifications = [...prevNotifications, newNotification]
+            if (updatedNotifications.length > 20) {
+            updatedNotifications.splice(0, updatedNotifications.length - 20)
+            }
+            return updatedNotifications
+        })
+
+        // Play sound effect (if needed)
+        // const notificationSound = new Audio('path/to/sound.mp3')
+        // notificationSound.play().catch(error => console.error('Error playing sound:', error))
+    }
+
+    const removeNotification = (id: number) => {
+        setNotifications(prevNotifications =>
+            prevNotifications.filter(notification => notification.id !== id)
+        )
+    }
+
+    useEffect(() => {
+        if (messages.add_success) {
+            addNotification({
+                variant: 'success',
+                title: 'Success',
+                message: messages.add_success
+            });
+        }
+        if (messages.update_success) {
+            addNotification({
+                variant: 'success',
+                title: 'Success',
+                message: messages.update_success
+            });
+        }
+        if (messages.delete_success) {
+            addNotification({
+                variant: 'success',
+                title: 'Success',
+                message: messages.delete_success
+            });
+        }
+        if (messages.error) {
+            addNotification({
+                variant: 'danger',
+                title: 'Error',
+                message: messages.error
+            });
+        }
+    }, [messages]);
+
     const detailsForm = useForm({
-        classroom_id: user.teacher?.classroom_id || 0,
+        classroom_id: currentClassroom || 0,
     })
 
     const handleDetailsSubmit = (e: React.FormEvent) => {
@@ -76,7 +137,19 @@ export default function TeacherEdit({
                         onSubmit={handleDetailsSubmit}
                     />
                 </Card>
+
+                <div className="fixed inset-x-8 top-0 z-[99] flex max-w-full flex-col gap-2 bg-transparent px-6 py-6 md:bottom-0 md:left-[unset] md:right-0 md:top-[unset] md:max-w-sm">
+                    {notifications.map(notification => (
+                    <Notification
+                        key={notification.id}
+                        {...notification}
+                        onDismiss={() => removeNotification(notification.id)}
+                        displayDuration={displayDuration}
+                    />
+                    ))}
+                </div>
             </div>
+
         </TeacherLayout>
     )
 }

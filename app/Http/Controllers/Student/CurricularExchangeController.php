@@ -67,8 +67,9 @@ class CurricularExchangeController extends Controller
             'description' => 'required|string',
             'level' => 'required|string|in:school,district,state,national,international',
             'document' => 'required|file|mimes:pdf,doc,docx|max:10240',
-            'type' => 'required|string|in:certificates, activities',
+            'type' => 'required|string|in:certificates,activities',
         ]);
+
 
         $curriculum = new Curriculum([
             'name' => $validated['name'],
@@ -102,12 +103,14 @@ class CurricularExchangeController extends Controller
             'description' => 'required|string',
             'level' => 'required|string|in:school,district,state,national,international',
             'document' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
+            'type' => 'required|string|in:certificates,activities',
         ]);
 
         $curriculum->fill([
             'name' => $validated['name'],
             'description' => $validated['description'],
             'level' => $validated['level'],
+            'type' => $validated['type'],
         ]);
 
         if ($request->hasFile('document')) {

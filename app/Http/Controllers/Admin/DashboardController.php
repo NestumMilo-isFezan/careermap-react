@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
 use Inertia\Inertia;
+use App\Models\Resume;
 use App\Models\Roadmap;
 use App\Models\Student;
 use App\Models\Analytics;
 use App\Models\UserRoadmap;
 use Illuminate\Http\Request;
+use App\Models\StudentAnswer;
+use App\Models\StudentResponse;
 use App\Http\Controllers\Controller;
 
 class DashboardController extends Controller
@@ -33,6 +36,14 @@ class DashboardController extends Controller
         $totalRoadmaps = Roadmap::count();
         $roadmapsWithUser = UserRoadmap::count();
 
+        $completedTests = StudentAnswer::select('student_id')
+            ->distinct()
+            ->count('student_id');
+
+        $resumeCount = Resume::select('user_id')
+            ->distinct()
+            ->count('user_id');
+
         return Inertia::render('Admin/Dashboard', [
             'totalUsers' => $totalUsers,
             'totalStudents' => $totalStudents,
@@ -44,6 +55,8 @@ class DashboardController extends Controller
             'nonScienceStream' => $nonScienceStream,
             'totalRoadmaps' => $totalRoadmaps,
             'roadmapsWithUser' => $roadmapsWithUser,
+            'completedTests' => $completedTests,
+            'resumeCount' => $resumeCount,
         ]);
     }
 

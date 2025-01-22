@@ -29,7 +29,7 @@ export default function Navbar({ openRatingModal, openReportBugModal }: NavbarPr
         return url === path;
     };
 
-    const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, sectionId: string) => {
+    const scrollToSection = (e: React.MouseEvent<Element>, sectionId: string) => {
         e.preventDefault();
         const element = document.getElementById(sectionId);
         if (element) {

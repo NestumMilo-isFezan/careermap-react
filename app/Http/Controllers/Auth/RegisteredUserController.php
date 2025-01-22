@@ -65,13 +65,12 @@ class RegisteredUserController extends Controller
 
     public function storeTeacher(Request $request)
     {
-        try {
             $request->validate([
                 'first_name' => 'required|string|max:255',
                 'last_name' => 'required|string|max:255',
                 'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
-                'referral_code' => 'required|string|max:255',
+                'referral_code' => 'required|string|max:255|exists:schools,referral_code',
             ]);
             $referral = School::where('referral_code', $request->referral_code)->first();
 
@@ -101,9 +100,6 @@ class RegisteredUserController extends Controller
             Auth::login($user);
 
             return redirect(route('home', absolute: false));
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Invalid referral code');
-        }
 
 
     }

@@ -249,7 +249,7 @@ export default function Index({ curriculums, skillPoints }: IndexProps) {
                                 <div className="flex flex-col w-full px-1 md:px-6">
                                     <div className="w-full">
                                         {/* Desktop View */}
-                                        <div className="hidden md:block border border-emerald-200 rounded-lg overflow-hidden">
+                                        <div className="hidden min-h-[50vh] md:block border border-emerald-200 rounded-lg overflow-hidden">
                                             <ScrollArea className="w-full rounded-lg">
                                                 <Table>
                                                     <TableHeader>

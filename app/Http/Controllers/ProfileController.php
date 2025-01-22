@@ -180,6 +180,8 @@ class ProfileController extends Controller
         $classrooms = [];
         if ($teacher && $teacher->school_id) {
             $classrooms = Classroom::where('school_id', $teacher->school_id)
+                ->where('teacher_id', null)
+                ->orWhere('teacher_id', $teacher->id)
                 ->get()
                 ->map(function($classroom) {
                     return [
@@ -190,9 +192,12 @@ class ProfileController extends Controller
                 ->toArray();
         }
 
+        $currentClassroom = Classroom::where('teacher_id', $teacher->id)->first()->id ?? 0;
+
         $props = [
             'user' => $user,
             'classrooms' => $classrooms,
+            'currentClassroom' => $currentClassroom,
             'messages' => [
                 'add_success' => session('add_success'),
                 'update_success' => session('update_success'),
@@ -215,7 +220,8 @@ class ProfileController extends Controller
         $teacher = $user->teacher;
 
         if ($teacher) {
-            $teacher->update($validated);
+            Classroom::where('teacher_id', $teacher->id)->update(['teacher_id' => null]);
+            Classroom::find($validated['classroom_id'])->update(['teacher_id' => $teacher->id]);
         }
 
         return back()->with('update_success', 'Class updated successfully');

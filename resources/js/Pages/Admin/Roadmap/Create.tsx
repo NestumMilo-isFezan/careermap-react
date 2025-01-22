@@ -179,7 +179,7 @@ export default function Create({ domains, personas, subjects }: FormProps) {
                         <div className="flex flex-col w-full gap-4">
                             <UploadImageField
                                 label="Roadmap Image"
-                                imagePath="https://penguinui.s3.amazonaws.com/component-assets/3d-avatar-1.webp"
+                                imagePath="/assets/placeholder.png"
                                 onImageChange={handleImageChange}
                                 errorMessage={errors.image}
                             />
