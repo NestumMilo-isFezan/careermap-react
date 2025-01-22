@@ -93,8 +93,9 @@ function calculateFlowHeights(data: {
     // Calculate dynamic heights with minimum values
     const subjectFlowHeight = Math.max(baseHeight, baseHeight + (prerequisites.length * itemSpacing));
     const personaFlowHeight = Math.max(baseHeight, baseHeight + (personas.length * itemSpacing));
-    const preuniversityFlowHeight = 800; // Keep fixed since it has fixed content
-    const universityFlowHeight = Math.max(750, 750 + (universityCourses.length * 100));
+    const preuniversityFlowHeight = 800;
+    // Significantly increase university flow height and base height
+    const universityFlowHeight = Math.max(1200, 1200 + (universityCourses.length * 300));
 
     return {
         subjectFlowHeight,
@@ -128,12 +129,28 @@ export function useFlowData(id: string) {
                     universityCourses: universityCourses.courses
                 });
 
+                // Calculate viewport center positions
+                const viewportCenterY = 400;  // Shifted down to keep positions positive
+                const viewportCenterX = 960; // Center of standard 1920px width
+
                 // Transform the data into nodes and edges
                 const nodes: Node[] = [
-                    { id: 'user-node', position: { x: 0, y: 0 }, data: { label: 'User', color: 'blue' }, type: 'user' },
+                    {
+                        id: 'user-node',
+                        position: {
+                            x: viewportCenterX - 960,
+                            y: viewportCenterY + 200
+                        },
+                        data: { label: 'User', color: 'blue' },
+                        type: 'user',
+                        draggable: true
+                    },
                     {
                         id: 'subflow-1',
-                        position: { x: 200, y: 100 },
+                        position: {
+                            x: viewportCenterX - 760,
+                            y: viewportCenterY + 100 // Prerequisites flow
+                        },
                         type: 'roadmap_subflow',
                         data: {
                             label: 'Prerequisites',
@@ -144,7 +161,10 @@ export function useFlowData(id: string) {
                     },
                     {
                         id: 'subflow-2',
-                        position: { x: 200, y: -heights.personaFlowHeight + 50 },
+                        position: {
+                            x: viewportCenterX - 760,
+                            y: viewportCenterY - heights.personaFlowHeight + 50 // Personality flow
+                        },
                         type: 'roadmap_subflow',
                         data: {
                             label: 'Personality',
@@ -155,7 +175,10 @@ export function useFlowData(id: string) {
                     },
                     {
                         id: 'subflow-3',
-                        position: { x: 900, y: -100 },
+                        position: {
+                            x: viewportCenterX - 60,
+                            y: viewportCenterY + 50 // Pre-University flow
+                        },
                         type: 'roadmap_subflow',
                         data: {
                             label: 'Pre-University',
@@ -166,12 +189,15 @@ export function useFlowData(id: string) {
                     },
                     {
                         id: 'subflow-4',
-                        position: { x: 1900, y: -80 },
+                        position: {
+                            x: viewportCenterX + 940,
+                            y: viewportCenterY + 70
+                        },
                         type: 'roadmap_subflow',
                         data: {
                             label: 'University',
                             category: 'university',
-                            width: 550,
+                            width: 700,
                             height: heights.universityFlowHeight
                         },
                     },
@@ -233,7 +259,10 @@ export function useFlowData(id: string) {
                     },
                     {
                         id: 'title-domain',
-                        position: { x: 1550, y: -60 },
+                        position: {
+                            x: viewportCenterX + 590,
+                            y: viewportCenterY + 90 // Domain title
+                        },
                         type: 'domain',
                         data: { label: 'Domain', category: 'domain', domain: domain },
                     },
@@ -359,12 +388,13 @@ export function useFlowData(id: string) {
                         id: `prerequisite-${prerequisite.id}`,
                         position: {
                             x: 120,
-                            y: 60 + (index * 200) // Increment Y position for each item
+                            y: 60 + (index * 200)
                         },
                         type: 'subject',
                         data: { label: prerequisite.name, category: 'subject', subject: prerequisite },
                         parentId: 'subflow-1',
-                        extent: 'parent'
+                        extent: 'parent',
+                        draggable: true
                     });
                 });
 
@@ -375,7 +405,8 @@ export function useFlowData(id: string) {
                         type: 'persona',
                         data: { label: persona.name, category: 'persona', persona: persona },
                         parentId: 'subflow-2',
-                        extent: 'parent'
+                        extent: 'parent',
+                        draggable: true
                     });
                 });
 
@@ -385,7 +416,8 @@ export function useFlowData(id: string) {
                     type: 'foundation',
                     data: { label: foundationCourse.institution_name, category: 'preuniversity', foundation: foundationCourse },
                     parentId: 'subflow-3',
-                    extent: 'parent'
+                    extent: 'parent',
+                    draggable: true
                 });
 
                 nodes.push({
@@ -394,16 +426,18 @@ export function useFlowData(id: string) {
                     type: 'diploma',
                     data: { label: diplomaCourse.institution_name, category: 'preuniversity', diploma: diplomaCourse },
                     parentId: 'subflow-3',
-                    extent: 'parent'
+                    extent: 'parent',
+                    draggable: true
                 });
 
                 nodes.push({
                     id: `university-name-${universityCourses.id}`,
-                    position: { x: 100, y: 90 },
+                    position: { x: 100, y: 100 },
                     type: 'roadmap',
                     data: { label: universityCourses.institution_name, category: 'university', },
                     parentId: 'subflow-4',
-                    extent: 'parent'
+                    extent: 'parent',
+                    draggable: true
                 });
 
 
@@ -414,7 +448,8 @@ export function useFlowData(id: string) {
                         type: 'roadmap',
                         data: { label: 'No Course Available', category: 'university', },
                         parentId: 'subflow-4',
-                        extent: 'parent'
+                        extent: 'parent',
+                        draggable: true
                     });
                     edges.push({
                         id: `edge-no-course-${universityCourses.id}`,
@@ -431,11 +466,19 @@ export function useFlowData(id: string) {
                 universityCourses.courses.forEach((course: UniversalCourse, index: number) => {
                     nodes.push({
                         id: `university-${course.id}`,
-                        position: { x: 150, y: 150 + (index * 200) },
+                        position: {
+                            x: 100,  // Adjusted x position
+                            y: 250 + (index * 300)  // Increased vertical spacing
+                        },
                         type: 'university',
-                        data: { label: course.course_name, category: 'university', university: course },
+                        data: {
+                            label: course.course_name,
+                            category: 'university',
+                            university: course
+                        },
                         parentId: 'subflow-4',
-                        extent: 'parent'
+                        extent: 'parent',
+                        draggable: true
                     });
                 });
 

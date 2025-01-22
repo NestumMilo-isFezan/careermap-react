@@ -27,8 +27,9 @@ import { Progress } from '@/shadcn/components/ui/progress';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/shadcn/components/ui/hover-card';
 import { Info } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shadcn/components/ui/tabs';
-import { LayoutDashboard, Map } from 'lucide-react';
+import { LayoutDashboard, Map, Download } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shadcn/components/ui/popover';
+import DownloadButton from './DownloadButton';
 
 interface RoadmapData {
       id: number;
@@ -189,6 +190,7 @@ export default function DisplayModal({ id }: { id: string }) {
                                             >
                                                 <Background />
                                                 <Controls />
+                                                <DownloadButton />
                                             </ReactFlow>
                                         </div>
                                     </div>
@@ -283,6 +285,7 @@ export default function DisplayModal({ id }: { id: string }) {
                                     >
                                         <Background />
                                         <Controls />
+                                        <DownloadButton />
                                     </ReactFlow>
                                 </div>
                             </div>

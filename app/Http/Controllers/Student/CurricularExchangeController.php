@@ -125,4 +125,14 @@ class CurricularExchangeController extends Controller
 
         return to_route('student.curricular.index')->with('success', 'Curricular updated successfully.');
     }
+
+    public function destroy($id)
+    {
+        $curriculum = Curriculum::findOrFail($id);
+        if($curriculum->document){
+            Storage::disk('public')->delete($curriculum->document);
+        }
+        $curriculum->delete();
+        return to_route('student.curricular.index')->with('success', 'Curricular deleted successfully.');
+    }
 }
