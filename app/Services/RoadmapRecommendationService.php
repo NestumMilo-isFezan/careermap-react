@@ -107,6 +107,7 @@ class RoadmapRecommendationService
         $gradeValues = [
             'a+' => 4,
             'a' => 4,
+            'a-' => 4,
             'b+' => 3,
             'b' => 3,
             'c+' => 2,

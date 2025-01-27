@@ -9,6 +9,7 @@ use Inertia\Response;
 use App\Models\School;
 use App\Models\Stream;
 use App\Models\Subject;
+use App\Models\Academic;
 use App\Models\Classroom;
 use App\Models\ExamSubject;
 use Illuminate\Support\Str;
@@ -383,7 +384,26 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
-        $examId = $user->academic->exam_id;
+        $examId = $user->academic->exam_id ?? null;
+
+        if(!$examId){
+            $newExam = Exam::create([
+                'exam_name' => 'Midterm',
+            ]);
+            Academic::create([
+                'user_id' => $user->id,
+                'exam_id' => $newExam->id,
+            ]);
+            $examId = $newExam->id;
+            foreach($validated['grades'] as $grade){
+                $examSubject = ExamSubject::create([
+                    'exam_id' => $examId,
+                    'subject_id' => $grade['subject_id'],
+                    'grade' => $grade['grade'],
+                ]);
+            }
+        }
+
         foreach ($validated['grades'] as $grade) {
             $examSubject = ExamSubject::where('exam_id', $examId)->where('subject_id', $grade['subject_id'])->first();
             if($examSubject){

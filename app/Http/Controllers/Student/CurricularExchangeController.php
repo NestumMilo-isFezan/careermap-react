@@ -70,7 +70,6 @@ class CurricularExchangeController extends Controller
             'type' => 'required|string|in:certificates,activities',
         ]);
 
-
         $curriculum = new Curriculum([
             'name' => $validated['name'],
             'description' => $validated['description'],
@@ -81,7 +80,9 @@ class CurricularExchangeController extends Controller
         ]);
 
         if ($request->hasFile('document')) {
-            $curriculum->saveFile($request->file('document'));
+            // Store file in a public directory with proper permissions
+            $path = $request->file('document')->store('curriculums', 'public');
+            $curriculum->document = $path;
         }
 
         $curriculum->save();
@@ -118,7 +119,9 @@ class CurricularExchangeController extends Controller
             if ($curriculum->document) {
                 Storage::disk('public')->delete($curriculum->document);
             }
-            $curriculum->saveFile($request->file('document'));
+            // Store new file in public directory
+            $path = $request->file('document')->store('curriculums', 'public');
+            $curriculum->document = $path;
         }
 
         $curriculum->save();
