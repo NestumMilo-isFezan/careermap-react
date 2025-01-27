@@ -1,7 +1,7 @@
 import { AdminDashboardProps } from '@/types';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Head } from '@inertiajs/react';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, ChartOptions } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 import {
     LayoutDashboard,
@@ -11,11 +11,14 @@ import {
     Beaker,
     GraduationCap,
     MapPin,
-    MapPinCheck
+    MapPinCheck,
+    BookHeart,
+    ScrollText
 } from 'lucide-react';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 // Register ChartJS components
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
 interface StatsCardProps {
     title: string;
@@ -64,12 +67,13 @@ const StatsCard = ({ title, metrics, chartData }: StatsCardProps) => {
                                     tooltip: {
                                         enabled: true
                                     },
+                                    // @ts-ignore - ignore datalabels typing issue
                                     datalabels: {
                                         display: false
                                     }
                                 },
                                 cutout: '40%'
-                            }}
+                            } as ChartOptions<'doughnut'>}
                         />
                     ) : (
                         <div className="h-full flex items-center justify-center flex-col">
@@ -122,7 +126,9 @@ export default function Dashboard({
     scienceStream,
     nonScienceStream,
     totalRoadmaps,
-    completedTests = 432,
+    roadmapsWithUser,
+    completedTests,
+    resumeCount
 }: AdminDashboardProps) {
     const greeting = () => {
         const hour = new Date().getHours();
@@ -144,7 +150,7 @@ export default function Dashboard({
     const { time, message } = greeting();
 
     const statsGridSection = (
-        <div className="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
             <StatsCard
                 title="User Activity"
                 metrics={[
@@ -203,14 +209,14 @@ export default function Dashboard({
                     },
                     {
                         label: "Favourite",
-                        value: 5,
+                        value: roadmapsWithUser,
                         icon: <MapPinCheck className="size-5 md:size-6 text-emerald-600" />
                     }
                 ]}
                 chartData={{
                     labels: ['Total', 'Favourite'],
                     datasets: [{
-                        data: [totalRoadmaps, 5],
+                        data: [totalRoadmaps, roadmapsWithUser],
                         backgroundColor: ['#8B5CF6', '#A78BFA'],
                         borderWidth: 0,
                     }]
@@ -281,6 +287,28 @@ export default function Dashboard({
 
                 {/* Stats Grid */}
                 {statsGridSection}
+
+                <div className="grid grid-cols-1 gap-6 mb-6 md:grid-cols-2">
+                    {/* Total Users Card */}
+                    <div className="p-6 bg-emerald-50 rounded-xl shadow-sm border border-emerald-500/50 hover:shadow-md hover:shadow-green-400/20 transition-shadow">
+                        <div className="flex flex-col mb-2 gap-x-2">
+                            <div className="flex flex-row items-center mb-2 gap-x-2">
+                                <BookHeart className="size-8 text-emerald-600" />
+                                <h2 className="text-xl font-semibold text-gray-800">Completed Traits</h2>
+                            </div>
+                            <p className="ml-10 text-4xl font-bold text-emerald-800 mb-2">{completedTests}</p>
+                        </div>
+                    </div>
+                    <div className="p-6 bg-emerald-50 rounded-xl shadow-sm border border-emerald-500/50 hover:shadow-md hover:shadow-green-400/20 transition-shadow">
+                        <div className="flex flex-col mb-2 gap-x-2">
+                            <div className="flex flex-row items-center mb-2 gap-x-2">
+                                <ScrollText className="size-8 text-emerald-600" />
+                                <h2 className="text-xl font-semibold text-gray-800">Resumes</h2>
+                            </div>
+                            <p className="ml-10 text-4xl font-bold text-emerald-800 mb-2">{resumeCount}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </AdminLayout>
     );

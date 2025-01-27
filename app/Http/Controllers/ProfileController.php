@@ -9,6 +9,7 @@ use Inertia\Response;
 use App\Models\School;
 use App\Models\Stream;
 use App\Models\Subject;
+use App\Models\Academic;
 use App\Models\Classroom;
 use App\Models\ExamSubject;
 use Illuminate\Support\Str;
@@ -180,6 +181,8 @@ class ProfileController extends Controller
         $classrooms = [];
         if ($teacher && $teacher->school_id) {
             $classrooms = Classroom::where('school_id', $teacher->school_id)
+                ->where('teacher_id', null)
+                ->orWhere('teacher_id', $teacher->id)
                 ->get()
                 ->map(function($classroom) {
                     return [
@@ -190,9 +193,12 @@ class ProfileController extends Controller
                 ->toArray();
         }
 
+        $currentClassroom = Classroom::where('teacher_id', $teacher->id)->first()->id ?? 0;
+
         $props = [
             'user' => $user,
             'classrooms' => $classrooms,
+            'currentClassroom' => $currentClassroom,
             'messages' => [
                 'add_success' => session('add_success'),
                 'update_success' => session('update_success'),
@@ -215,7 +221,8 @@ class ProfileController extends Controller
         $teacher = $user->teacher;
 
         if ($teacher) {
-            $teacher->update($validated);
+            Classroom::where('teacher_id', $teacher->id)->update(['teacher_id' => null]);
+            Classroom::find($validated['classroom_id'])->update(['teacher_id' => $teacher->id]);
         }
 
         return back()->with('update_success', 'Class updated successfully');
@@ -377,7 +384,26 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
-        $examId = $user->academic->exam_id;
+        $examId = $user->academic->exam_id ?? null;
+
+        if(!$examId){
+            $newExam = Exam::create([
+                'exam_name' => 'Midterm',
+            ]);
+            Academic::create([
+                'user_id' => $user->id,
+                'exam_id' => $newExam->id,
+            ]);
+            $examId = $newExam->id;
+            foreach($validated['grades'] as $grade){
+                $examSubject = ExamSubject::create([
+                    'exam_id' => $examId,
+                    'subject_id' => $grade['subject_id'],
+                    'grade' => $grade['grade'],
+                ]);
+            }
+        }
+
         foreach ($validated['grades'] as $grade) {
             $examSubject = ExamSubject::where('exam_id', $examId)->where('subject_id', $grade['subject_id'])->first();
             if($examSubject){

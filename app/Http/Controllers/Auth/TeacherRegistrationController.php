@@ -32,7 +32,7 @@ class TeacherRegistrationController extends Controller
             $step = 2;
         }
 
-        $classrooms = Classroom::where('school_id', $schools->id)->get();
+        $classrooms = Classroom::where('school_id', $schools->id)->where('teacher_id', null)->get();
         $classrooms = $classrooms->map(function($classroom){
             return [
                 'id' => $classroom->id,

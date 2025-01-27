@@ -67,7 +67,7 @@ class CurricularExchangeController extends Controller
             'description' => 'required|string',
             'level' => 'required|string|in:school,district,state,national,international',
             'document' => 'required|file|mimes:pdf,doc,docx|max:10240',
-            'type' => 'required|string|in:certificates, activities',
+            'type' => 'required|string|in:certificates,activities',
         ]);
 
         $curriculum = new Curriculum([
@@ -80,7 +80,9 @@ class CurricularExchangeController extends Controller
         ]);
 
         if ($request->hasFile('document')) {
-            $curriculum->saveFile($request->file('document'));
+            // Store file in a public directory with proper permissions
+            $path = $request->file('document')->store('curriculums', 'public');
+            $curriculum->document = $path;
         }
 
         $curriculum->save();
@@ -102,12 +104,14 @@ class CurricularExchangeController extends Controller
             'description' => 'required|string',
             'level' => 'required|string|in:school,district,state,national,international',
             'document' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
+            'type' => 'required|string|in:certificates,activities',
         ]);
 
         $curriculum->fill([
             'name' => $validated['name'],
             'description' => $validated['description'],
             'level' => $validated['level'],
+            'type' => $validated['type'],
         ]);
 
         if ($request->hasFile('document')) {
@@ -115,11 +119,23 @@ class CurricularExchangeController extends Controller
             if ($curriculum->document) {
                 Storage::disk('public')->delete($curriculum->document);
             }
-            $curriculum->saveFile($request->file('document'));
+            // Store new file in public directory
+            $path = $request->file('document')->store('curriculums', 'public');
+            $curriculum->document = $path;
         }
 
         $curriculum->save();
 
         return to_route('student.curricular.index')->with('success', 'Curricular updated successfully.');
+    }
+
+    public function destroy($id)
+    {
+        $curriculum = Curriculum::findOrFail($id);
+        if($curriculum->document){
+            Storage::disk('public')->delete($curriculum->document);
+        }
+        $curriculum->delete();
+        return to_route('student.curricular.index')->with('success', 'Curricular deleted successfully.');
     }
 }

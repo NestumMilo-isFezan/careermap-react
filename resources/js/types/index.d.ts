@@ -137,6 +137,7 @@ export interface AdminDashboardProps extends PageProps {
     totalRoadmaps: number;
     roadmapsWithUser: number;
     completedTests?: number;
+    resumeCount?: number;
 }
 
 export type SelectedRoadmap = {

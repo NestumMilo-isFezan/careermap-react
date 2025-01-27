@@ -112,7 +112,7 @@ export default function WizardForm({
         e.preventDefault();
 
         // Check if all required grades are filled
-        const requiredSubjects = [...coreSubjects, ...streamSubjects];
+        const requiredSubjects = [...coreSubjects];
         const areAllGradesFilled = requiredSubjects.every(subject =>
             gradesForm.data.grades.some(grade =>
                 grade.subject_id === subject.id && grade.grade

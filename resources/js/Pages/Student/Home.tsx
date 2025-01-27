@@ -195,6 +195,23 @@ interface HomeProps {
 }
 
 export default function Home({ recommendations, user, news }: HomeProps) {
+    const [displayCount, setDisplayCount] = useState(4); // Default for mobile
+
+    useEffect(() => {
+        const handleResize = () => {
+            // Use 3 items for desktop (lg screens), 4 for mobile
+            setDisplayCount(window.innerWidth >= 1024 ? 3 : 4);
+        };
+
+        // Set initial value
+        handleResize();
+
+        // Add event listener
+        window.addEventListener('resize', handleResize);
+
+        // Cleanup
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     return (
         <StudentLayout>
@@ -224,11 +241,13 @@ export default function Home({ recommendations, user, news }: HomeProps) {
                             </Link>
                         </div>
                         <div className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 py-4 pb-8 mx-auto w-full md:max-w-screen-lg">
-                            {recommendations && recommendations.data.map((roadmap: Roadmap) => (
-                                <div>
-                                    <HomeRoadmapCard roadmap={roadmap} />
-                                </div>
-                            ))}
+                            {recommendations && recommendations.data
+                                .slice(0, displayCount)
+                                .map((roadmap: Roadmap) => (
+                                    <div key={roadmap.id}>
+                                        <HomeRoadmapCard roadmap={roadmap} />
+                                    </div>
+                                ))}
                         </div>
                     </div>
                 </div>

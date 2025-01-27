@@ -92,7 +92,7 @@ export default function GradeForm({
     };
 
     const areAllGradesFilled = () => {
-        const requiredSubjects = [...coreSubjects, ...visibleStreamSubjects];
+        const requiredSubjects = [...coreSubjects];
         return requiredSubjects.every(subject =>
             form.data.grades.some(grade =>
                 grade.subject_id === subject.id && grade.grade

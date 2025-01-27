@@ -52,9 +52,9 @@ export default function Dashboard({ school, user, classroom, softskills }: { sch
                                         <LayoutDashboard className="size-5 md:size-6 text-emerald-600" />
                                     </span>
                                     <div className="flex flex-col">
-                                        <h1 className="text-xl md:text-2xl font-bold text-emerald-800">Your Dashboard</h1>
+                                        <h1 className="text-xl md:text-2xl font-bold text-emerald-800">Curricular Exchange</h1>
                                         <p className="text-emerald-700 text-xs md:text-sm text-justify max-w-lg">
-                                            Welcome to your dashboard, .
+                                            Assess your students' soft skills for each curriculum.
                                         </p>
                                     </div>
                                 </div>

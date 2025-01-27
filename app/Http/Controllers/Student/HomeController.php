@@ -34,7 +34,7 @@ class HomeController extends Controller
                     'created_at' => $item->created_at->format('Y-m-d H:i:s'),
                 ];
             });
-        $recommendations = $this->recommendationService->recommendationProcess(null, null, null)->take(3);
+        $recommendations = $this->recommendationService->recommendationProcess(null, null, null)->take(4);
 
         return Inertia::render('Student/Home', [
             'recommendations' => RecommendedRoadmapResource::collection($recommendations),
