@@ -18,7 +18,7 @@ export default function RoadmapItem({roadmap, onDelete}: Props) {
     const maxHeight = "h-34 md:h-48";
     const minHeight = "min-h-[10rem]";
 
-    const recommendationPercentage = roadmap.recommendation_score ? roadmap.recommendation_score : 0;
+    const recommendationPercentage = roadmap.recommendation_score ? Math.round(roadmap.recommendation_score) : 0;
 
     const user = usePage().props.auth.user ? usePage().props.auth.user : null;
 

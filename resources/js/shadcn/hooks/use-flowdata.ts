@@ -59,18 +59,18 @@ interface RoadmapData {
 }
 
 interface CourseData {
-  university_courses: {
+  universityCourses: {
     id: string;
     institution_name: string;
     courses: Array<UniversalCourse>;
   };
-  foundation_course: {
+  foundationCourse: {
     id: string;
     institution_name: string;
     faculty_name: string;
     courses: Array<ModifiedCourse>;
   };
-  diploma_course: {
+  diplomaCourse: {
     id: string;
     institution_name: string;
     faculty_name: string;
@@ -110,6 +110,9 @@ export function useFlowData(id: string) {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
     const [roadmap, setRoadmap] = useState<RoadmapData | null>(null);
+    const [prerequisites, setPrerequisites] = useState<Prerequisite[] | null>(null);
+    const [personas, setPersonas] = useState<Persona[] | null>(null);
+    const [courses, setCourses] = useState<CourseData | null>(null);
 
     useEffect(() => {
         async function fetchData() {
@@ -119,6 +122,7 @@ export function useFlowData(id: string) {
                 const response = await axios.get(route('student.roadmap.show', {id: id}));
 
                 const { data, courses } = response.data;
+                console.log(data);
                 const { roadmap, prerequisites, personas, domain } = data;
                 const { universityCourses, foundationCourse, diplomaCourse } = courses;
 
@@ -557,6 +561,9 @@ export function useFlowData(id: string) {
 
                 setFlowData({ nodes, edges });
                 setRoadmap(roadmap);
+                setPrerequisites(prerequisites);
+                setPersonas(personas);
+                setCourses(courses);
             } catch (err) {
                 console.error('Error fetching roadmap data:', err);
                 setError(err instanceof Error ? err : new Error('An error occurred while fetching roadmap data'));
@@ -571,5 +578,5 @@ export function useFlowData(id: string) {
         }
     }, [id]);
 
-    return { flowData, roadmap, isLoading, error };
+    return { flowData, roadmap, isLoading, error, prerequisites, personas, courses };
 }

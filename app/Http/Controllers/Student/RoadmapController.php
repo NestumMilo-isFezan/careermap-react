@@ -33,27 +33,18 @@ class RoadmapController extends Controller
             'description' => $domain->description
         ])->toArray();
 
-        $roadmap = null;
-        $query = Roadmap::query();
+        $recommendation = request('recommendation');
+        $name = request('name');
+        $domainId = request('domain_id');
+        $favorite = request('favorites');
 
-        // Get user's favorite roadmaps if favorites filter is active
-        if (request('favorites')) {
-            $query->whereHas('userRoadmaps', function($q) {
-                $q->where('user_id', Auth::user()->id);
-            });
-            $sortedRoadmap = $query->paginate(12);
-        } else {
-            $recommendation = request('recommendation');
-            $name = request('name');
-            $domainId = request('domain_id');
-
-            $sortedRoadmap = match(true) {
-                !empty($name) => $this->roadmapRecommendationService->recommendationProcess(null, $name),
-                !empty($domainId) => $this->roadmapRecommendationService->recommendationProcess(null, null, $domainId),
-                !empty($recommendation) => $this->roadmapRecommendationService->recommendationProcess($recommendation),
-                default => $this->roadmapRecommendationService->recommendationProcess()
-            };
-        }
+        $sortedRoadmap = match(true) {
+            !empty($name) => $this->roadmapRecommendationService->recommendationProcess(null, $name),
+            !empty($domainId) => $this->roadmapRecommendationService->recommendationProcess(null, null, $domainId),
+            !empty($recommendation) => $this->roadmapRecommendationService->recommendationProcess($recommendation),
+            !empty($favorite) => $this->roadmapRecommendationService->recommendationProcess(null, null, null, $favorite),
+            default => $this->roadmapRecommendationService->recommendationProcess()
+        };
 
         return Inertia::render('Student/Roadmap/Index',[
             'roadmaps' => RecommendedRoadmapResource::collection($sortedRoadmap),

@@ -121,7 +121,7 @@ class RoadmapRecommendationService
         return $gradeValues[strtolower($studentGrade)] >= $gradeValues[strtolower($requirement)];
     }
 
-    public function recommendationProcess($recommendation = null, $name = null, $domainId = null)
+    public function recommendationProcess($recommendation = null, $name = null, $domainId = null, $favorite = null)
     {
         $user = Auth::user();
         $studentStream = $user->student->stream;
@@ -131,11 +131,18 @@ class RoadmapRecommendationService
         if($recommendation){
             $sortedRoadmap = $this->filterByRecommendation($recommendation, $sortedRoadmap);
         }
+        else{
+            $sortedRoadmap = $sortedRoadmap->where('recommendation_score', '>=', 40);
+        }
+
         if($name){
             $sortedRoadmap = $this->filterByName($name, $sortedRoadmap);
         }
         if($domainId){
             $sortedRoadmap = $this->filterByDomainId($domainId, $sortedRoadmap);
+        }
+        if($favorite){
+            $sortedRoadmap = $sortedRoadmap->where('is_favorite', true);
         }
 
         return $this->paginating(12, $sortedRoadmap);
