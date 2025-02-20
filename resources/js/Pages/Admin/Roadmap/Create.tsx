@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import AdminLayout from '@/Layouts/AdminLayout';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, router } from '@inertiajs/react';
 import { Domain, Persona } from '@/types';
 import { Subject } from '@/types/select';
 
 // Icon
-import { PlusIcon, Trash, AlertCircle, Save } from 'lucide-react';
+import { PlusIcon, Trash, AlertCircle, Save, ArrowLeft } from 'lucide-react';
 
 // UI Components
 import { FormField, SelectOption } from '@/Components/shadcn/Form/Components';
@@ -174,15 +174,35 @@ export default function Create({ domains, personas, subjects }: FormProps) {
         <AdminLayout title="Create Roadmap">
             <Head title="Create Roadmap" />
             <div className="flex flex-col w-full pb-10 md:pb-5">
+
                 <div className="flex flex-col w-full p-6 pb-10 bg-emerald-50 border border-primary rounded-lg">
+                    <div className="flex flex-row justify-between">
+                        <h1 className="font-bold text-xl text-emerald-900">
+                            Create Roadmap
+                        </h1>
+                        {/* Add back button */}
+                        <Button
+                            variant="ghost"
+                            className="w-fit mb-4 text-emerald-500 hover:text-emerald-900 border border-emerald-500"
+                            onClick={() => router.get(route('admin.roadmap.index'))}
+                        >
+                            <ArrowLeft className="w-4 h-4 mr-2" />
+                            Back
+                        </Button>
+                    </div>
                     <form className="flex flex-col w-full" onSubmit={handleSubmit}>
                         <div className="flex flex-col w-full gap-4">
-                            <UploadImageField
-                                label="Roadmap Image"
-                                imagePath="/assets/placeholder.png"
-                                onImageChange={handleImageChange}
-                                errorMessage={errors.image}
-                            />
+                            <div className="flex flex-col w-full bg-emerald-50 border gap-4 border-primary rounded-lg px-4 pt-2 pb-7">
+                                <div className="flex justify-between items-center">
+                                    <h2 className="text-lg font-semibold">Roadmap Image</h2>
+                                </div>
+                                <UploadImageField
+                                    label="Upload Image Here"
+                                    imagePath="/assets/placeholder.png"
+                                    onImageChange={handleImageChange}
+                                    errorMessage={errors.image}
+                                />
+                            </div>
                             <div className="flex flex-col w-full bg-emerald-50 border gap-4 border-primary rounded-lg px-4 py-2">
                                 <div className="flex justify-between items-center">
                                     <h2 className="text-lg font-semibold">Roadmap Details</h2>

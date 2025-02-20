@@ -22,7 +22,24 @@ class StoreRoadmapRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string|max:255',
+            'title' => [
+                'required',
+                'string',
+                'max:255',
+                function ($attribute, $value, $fail) {
+                    // Remove all spaces and special characters, convert to lowercase
+                    $normalizedTitle = preg_replace('/[^a-zA-Z0-9]/', '', strtolower($value));
+
+                    $exists = \App\Models\Roadmap::whereRaw(
+                        "LOWER(REGEXP_REPLACE(title, '[^a-zA-Z0-9]', '')) = ?",
+                        [$normalizedTitle]
+                    )->exists();
+
+                    if ($exists) {
+                        $fail('A roadmap with this title already exists (ignoring spaces and special characters).');
+                    }
+                }
+            ],
             'description' => 'required|string',
             'image' => 'required|image|max:2048',
             'domain_id' => 'required|exists:domains,id',
@@ -40,6 +57,7 @@ class StoreRoadmapRequest extends FormRequest
         return [
             'title.required' => 'A roadmap title is required',
             'title.max' => 'Title cannot be more than :max characters',
+            'title.unique_insensitive' => 'A roadmap with this title already exists (case and spacing insensitive).',
             'description.required' => 'Please provide a roadmap description',
             'image.required' => 'A roadmap image is required',
             'image.image' => 'The file must be an image',

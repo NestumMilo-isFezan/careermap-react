@@ -19,6 +19,21 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->timestamps();
         });
+        Schema::create('prerequisites', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->foreignId('roadmap_id')->constrained('roadmaps')->onDelete('cascade');
+            $table->timestamps();
+        });
+
+        Schema::create('adaptations', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->foreignId('roadmap_id')->constrained('roadmaps')->onDelete('cascade');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -27,5 +42,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('roadmaps');
+        Schema::dropIfExists('prerequisites');
+        Schema::dropIfExists('adaptations');
     }
 };
